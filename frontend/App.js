@@ -7,7 +7,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider } from './src/context/AuthContext';
 import LoginScreen from './src/screens/LoginScreen';
-import RegisterScreen from './src/screens/RegisterScreen';
+import RegisterUserScreen from './src/screens/RegisterUserScreen';
+import RegisterCompanyScreen from './src/screens/RegisterCompanyScreen';
 import HomeScreen from './src/screens/HomeScreen';
 
 const Stack = createNativeStackNavigator();
@@ -19,7 +20,8 @@ const App = () => {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Login">
             <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="RegisterUser" component={RegisterUserScreen} />
+            <Stack.Screen name="RegisterCompany" component={RegisterCompanyScreen} />
             <Stack.Screen
               name="Home"
               component={HomeScreen}

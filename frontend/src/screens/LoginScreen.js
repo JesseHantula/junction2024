@@ -94,8 +94,13 @@ const LoginScreen = ({ navigation }) => {
 
       <Button title="Login" onPress={handleLogin} />
       <Button
-        title="Register"
-        onPress={() => navigation.navigate('Register')}
+        title="Register as User"
+        onPress={() => navigation.navigate('RegisterUser')}
+        style={{ marginTop: 10 }}
+      />
+      <Button
+        title="Register as Company"
+        onPress={() => navigation.navigate('RegisterCompany')}
         style={{ marginTop: 10 }}
       />
     </View>
