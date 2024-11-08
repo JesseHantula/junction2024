@@ -44,6 +44,7 @@ const RegisterUserScreen = ({ navigation }) => {
 
     registerUser({ variables })
       .then(response => {
+        console.log(response)
         if (response.data.registerUser.success) {
           login('User', response.data.registerUser.user);
           navigation.replace('Home');
