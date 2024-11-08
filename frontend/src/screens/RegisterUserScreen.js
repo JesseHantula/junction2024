@@ -37,7 +37,7 @@ const RegisterUserScreen = ({ navigation }) => {
     const variables = {
       username: formData.username,
       password: formData.password,
-      values: null,
+      values: formData.coreValues,
       preferences: null,
       workingHabits: null,
     };
