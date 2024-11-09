@@ -158,7 +158,7 @@ class Query(graphene.ObjectType):
         matches.sort(key=lambda x: x.score, reverse=True)
         return matches
     
-    def resolve_requests(self, info, user_id=None, job_listing_id=None, status=None):
+    def resolve_requests(self, info):
         return Request.objects.all()
 
 

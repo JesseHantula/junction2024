@@ -19,7 +19,7 @@ const JobListingScreen = ({ route }) => {
 
   const [createRequest, { loading: requestLoading }] = useMutation(CREATE_REQUEST, {
     onCompleted: (response) => {
-      if (response.createRequest.success) {
+      if (response.createRequest.success == "True") {
         Alert.alert("Request Sent", "You've expressed interest in this job listing.");
       } else {
         Alert.alert("Error", response.createRequest.message);

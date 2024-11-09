@@ -120,7 +120,7 @@ export const CREATE_JOB_LISTING = gql`
 `;
 
 export const CREATE_REQUEST = gql`
-  mutation CreateRequest($userId: String!, $jobListingId: ID!) {
+  mutation CreateRequest($userId: ID!, $jobListingId: ID!) {
     createRequest(userId: $userId, jobListingId: $jobListingId) {
       success
       message
