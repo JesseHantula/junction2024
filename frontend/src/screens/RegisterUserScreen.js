@@ -9,6 +9,7 @@ const REGISTER_USER = gql`
   mutation RegisterUser(
     $username: String!
     $password: String!
+    $birthday: Date!
     $gender: String!
     $race: String!
     $values: [String]
@@ -17,6 +18,7 @@ const REGISTER_USER = gql`
     registerUser(
       username: $username
       password: $password
+      birthday: $birthday
       gender: $gender
       race: $race
       values: $values
@@ -38,6 +40,7 @@ const RegisterUserScreen = ({ navigation }) => {
     const variables = {
       username: formData.username,
       password: formData.password,
+      birthday: formData.birthDate,
       gender: formData.gender,
       race: formData.race,
       values: formData.coreValues,

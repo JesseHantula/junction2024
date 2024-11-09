@@ -1,27 +1,10 @@
 import graphene
-import json
-from datetime import date
-
-USERS_FILE = "users.json"
-COMPANIES_FILE = "companies.json"
-
-
-def load_data(file_name):
-    try:
-        with open(file_name, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return []
-
-
-def save_data(file_name, data):
-    with open(file_name, "w") as f:
-        json.dump(data, f)
-
+from .models import User, Company
 
 class UserType(graphene.ObjectType):
     username = graphene.String()
     password = graphene.String()
+    birthday = graphene.Date()
     gender = graphene.String()
     race = graphene.String()
     values = graphene.List(graphene.String)
@@ -39,6 +22,7 @@ class RegisterUser(graphene.Mutation):
     class Arguments:
         username = graphene.String(required=True)
         password = graphene.String(required=True)
+        birthday = graphene.Date(required=True)
         gender = graphene.String(required=True)
         race = graphene.String(required=True)
         values = graphene.List(graphene.String)
@@ -47,31 +31,21 @@ class RegisterUser(graphene.Mutation):
     success = graphene.Boolean()
     user = graphene.Field(UserType)
 
-    def mutate(
-        self,
-        info,
-        username,
-        password,
-        gender,
-        race,
-        values=None,
-        working_style=None,
-    ):
-        users = load_data(USERS_FILE)
-        for user in users:
-            if user["username"] == username:
-                return RegisterUser(success=False, user=None)  # Username already exists
-        new_user = {
-            "username": username,
-            "password": password,
-            "gender": gender,
-            "race": race,
-            "values": values or [],
-            "working_style": working_style
-        }
-        users.append(new_user)
-        save_data(USERS_FILE, users)
-        return RegisterUser(success=True, user=UserType(**new_user))
+    def mutate(self, info, username, password, birthday, gender, race, values=None, working_style=None):
+        if User.objects.filter(username=username).exists():
+            return RegisterUser(success=False, user=None)
+
+        user = User.objects.create(
+            username=username,
+            password=password,
+            birthday=birthday,
+            gender=gender,
+            race=race,
+            values=values or [],
+            working_style=working_style
+        )
+
+        return RegisterUser(success=True, user=UserType(username=user.username))
 
 
 class LoginUser(graphene.Mutation):
@@ -83,11 +57,11 @@ class LoginUser(graphene.Mutation):
     user = graphene.Field(UserType)
 
     def mutate(self, info, username, password):
-        users = load_data(USERS_FILE)
-        for user in users:
-            if user["username"] == username and user["password"] == password:
-                return LoginUser(success=True, user=UserType(**user))
-        return LoginUser(success=False, user=None)
+        try:
+            user = User.objects.get(username=username, password=password)
+            return LoginUser(success=True, user=UserType(username=user.username))
+        except User.DoesNotExist:
+            return LoginUser(success=False, user=None)
 
 
 class RegisterCompany(graphene.Mutation):
@@ -101,25 +75,19 @@ class RegisterCompany(graphene.Mutation):
     success = graphene.Boolean()
     company = graphene.Field(CompanyType)
 
-    def mutate(
-        self, info, name, password, values=None, preferences=None, working_habits=None
-    ):
-        companies = load_data(COMPANIES_FILE)
-        for company in companies:
-            if company["name"] == name:
-                return RegisterCompany(
-                    success=False, company=None
-                )  # Company name already exists
-        new_company = {
-            "name": name,
-            "password": password,
-            "values": values or [],
-            "preferences": preferences or [],
-            "working_habits": working_habits or [],
-        }
-        companies.append(new_company)
-        save_data(COMPANIES_FILE, companies)
-        return RegisterCompany(success=True, company=CompanyType(**new_company))
+    def mutate(self, info, name, password, values=None, preferences=None, working_habits=None):
+        if Company.objects.filter(name=name).exists():
+            return RegisterCompany(success=False, company=None)
+
+        company = Company.objects.create(
+            name=name,
+            password=password,
+            values=values or [],
+            preferences=preferences or [],
+            working_habits=working_habits or []
+        )
+
+        return RegisterCompany(success=True, company=CompanyType(name=company.name))
 
 
 class LoginCompany(graphene.Mutation):
@@ -131,14 +99,11 @@ class LoginCompany(graphene.Mutation):
     company = graphene.Field(CompanyType)
 
     def mutate(self, info, name, password):
-        companies = load_data(COMPANIES_FILE)
-        for company in companies:
-            if company["name"] == name and company["password"] == password:
-                return LoginCompany(success=True, company=CompanyType(**company))
-        return LoginCompany(success=False, company=None)
-
-
-# backend/schema.py (continued)
+        try:
+            company = Company.objects.get(name=name, password=password)
+            return LoginCompany(success=True, company=CompanyType(name=company.name))
+        except Company.DoesNotExist:
+            return LoginCompany(success=False, company=None)
 
 
 class MatchType(graphene.ObjectType):
@@ -151,24 +116,21 @@ class Query(graphene.ObjectType):
     match = graphene.List(MatchType)
 
     def resolve_match(self, info):
-        users = load_data(USERS_FILE)
-        companies = load_data(COMPANIES_FILE)
+        users = User.objects.all()
+        companies = Company.objects.all()
         matches = []
         for user in users:
             for company in companies:
-                score = len(set(user["values"]) & set(company["values"]))
+                score = len(set(user.values) & set(company.values))
                 if score > 0:
                     matches.append(
                         MatchType(
-                            user=UserType(**user),
-                            company=CompanyType(**company),
+                            user=UserType(username=user.username),
+                            company=CompanyType(name=company.name),
                             score=score,
                         )
                     )
         return matches
-
-
-# backend/schema.py (continued)
 
 
 class Mutation(graphene.ObjectType):
