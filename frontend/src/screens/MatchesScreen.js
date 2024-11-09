@@ -41,7 +41,7 @@ const MatchesScreen = ({ navigation }) => {  // Receive navigation prop
         renderItem={({ item }) => (
           <TouchableOpacity 
             style={styles.card} 
-            onPress={() => handlePress(item.jobListing.id)}  // Pass job listing ID to the next screen
+            onPress={() => handlePress(item.jobListing.id)}
           >
             <Text style={styles.companyName}>Job Title: {item.jobListing.title}</Text>
             <Text style={styles.matchScore}>Match Score: {item.score}</Text>
