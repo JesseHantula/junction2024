@@ -10,9 +10,15 @@ const UserScreen = ({ route }) => {
     variables: { username: username },
   })
 
+  if (loading) {
+    return <Text style={styles.loadingText}>Loading...</Text>
+  }
+
+  if (error) {
+    return <Text style={styles.errorText}>Error loading profile</Text>
+  }
+
   const {
-    username: userName,
-    birthday,
     gender,
     race,
     values,
@@ -26,14 +32,42 @@ const UserScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>User Profile</Text>
-      <Text style={styles.field}>Gender: {gender}</Text>
-      <Text style={styles.field}>Race: {race}</Text>
-      <Text style={styles.field}>Values: {JSON.parse(values).join(', ')}</Text>
-      <Text style={styles.field}>Working Style: {workingStyle || 'N/A'}</Text>
-      <Text style={styles.field}>Work-Life Balance: {workLifeBalance}/10</Text>
-      <Text style={styles.field}>Flexibility: {flexibility}/10</Text>
-      <Text style={styles.field}>Mental Health: {mentalHealth}/10</Text>
-      <Text style={styles.field}>Skills: {JSON.parse(skills).join(', ')}</Text>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Basic Information</Text>
+        <Text style={styles.field}>Gender: <Text style={styles.fieldValue}>{gender}</Text></Text>
+        <Text style={styles.field}>Race: <Text style={styles.fieldValue}>{race}</Text></Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Professional Traits</Text>
+        <Text style={styles.field}>
+          Values: <Text style={styles.fieldValue}>{JSON.parse(values).join(', ')}</Text>
+        </Text>
+        <Text style={styles.field}>
+          Working Style: <Text style={styles.fieldValue}>{workingStyle || 'N/A'}</Text>
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Value of well-being in the workplace</Text>
+        <Text style={styles.field}>
+          Work-Life Balance: <Text style={styles.fieldValue}>{workLifeBalance}/10</Text>
+        </Text>
+        <Text style={styles.field}>
+          Flexibility: <Text style={styles.fieldValue}>{flexibility}/10</Text>
+        </Text>
+        <Text style={styles.field}>
+          Mental Health: <Text style={styles.fieldValue}>{mentalHealth}/10</Text>
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Skills</Text>
+        <Text style={styles.field}>
+          <Text style={styles.fieldValue}>{JSON.parse(skills).join(', ')}</Text>
+        </Text>
+      </View>
     </View>
   )
 }

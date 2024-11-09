@@ -31,13 +31,20 @@ const CompanyProfile = ({ name }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Company Profile</Text>
-      <Text style={styles.field}>Company name: {companyName}</Text>
-      <Text style={styles.field}>Values: {JSON.parse(values).join(', ')}</Text>
-      <Text style={styles.field}>Work-Life Balance: {workLifeBalance}/10</Text>
-      <Text style={styles.field}>Flexibility: {flexibility}/10</Text>
-      <Text style={styles.field}>Mental Health: {mentalHealth}/10</Text>
-      <Text style={styles.field}>Average Rating: {averageStars.toFixed(1)} ★</Text>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Company Information</Text>
+        <Text style={styles.field}>Company name: <Text style={styles.fieldValue}>{companyName}</Text></Text>
+        <Text style={styles.field}>Company values: <Text style={styles.fieldValue}>{JSON.parse(values).join(', ')}</Text></Text>
+        <Text style={styles.field}>Average Rating: <Text style={styles.fieldValue}>{averageStars.toFixed(1)}/5</Text></Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Value of well-being in the company</Text>
+        <Text style={styles.field}>Work-Life Balance: <Text style={styles.fieldValue}>{workLifeBalance}/10</Text></Text>
+        <Text style={styles.field}>Flexibility: <Text style={styles.fieldValue}>{flexibility}/10</Text></Text>
+        <Text style={styles.field}>Mental Health: <Text style={styles.fieldValue}>{mentalHealth}/10</Text></Text>
+      </View>
     </View>
   );
 };

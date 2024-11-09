@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { GET_COMPANY, GET_COMPANY_REVIEWS_AVG_SCORE } from '../graphql/queries';
+import styles from '../styles/profileStyles';  // Import the new styles
 
 const CompanyProfileScreen = ({ route, navigation }) => {
   const { companyName } = route.params;
@@ -15,20 +16,20 @@ const CompanyProfileScreen = ({ route, navigation }) => {
   });
 
   if (loadingCompany || loadingAvgScore) {
-    return <ActivityIndicator style={styles.loading} size="large" color="#0000ff" />;
+    return <ActivityIndicator style={styles.loadingText} size="large" color="#0000ff" />;
   }
   if (errorCompany) {
-    return <Text style={styles.error}>Error: {errorCompany.message}</Text>;
+    return <Text style={styles.errorText}>Error: {errorCompany.message}</Text>;
   }
   if (errorAvgScore) {
-    return <Text style={styles.error}>Error loading average rating: {errorAvgScore.message}</Text>;
+    return <Text style={styles.errorText}>Error loading average rating: {errorAvgScore.message}</Text>;
   }
 
   const { name, values, workLifeBalance, flexibility, mentalHealth, jobListings } = companyData.company;
 
   const averageStars = avgScoreData.companyReviewsAvgScore || 5;
 
-  parsedValues = typeof values === 'string' ? JSON.parse(values) : values;
+  const parsedValues = typeof values === 'string' ? JSON.parse(values) : values;
 
   const handleReview = () => {
     Alert.alert("Warning", "Please only leave a review if you are currently employed at the company.");
@@ -36,65 +37,40 @@ const CompanyProfileScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>{name}</Text>
-      <Text>Values: {parsedValues.join(', ')}</Text>
-      <Text>Work-Life Balance: {workLifeBalance}</Text>
-      <Text>Flexibility: {flexibility}</Text>
-      <Text>Mental Health: {mentalHealth}</Text>
-      <Text>Average Rating: {averageStars.toFixed(1)} ★</Text>
-      <Text>Job Listings:</Text>
-      {jobListings.map((job, index) => (
-        <Text key={index} style={styles.jobListing}>
-          - {job.title} ({job.location})
-        </Text>
-      ))}
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Average Rating</Text>
+        <Text style={styles.field}>{averageStars.toFixed(1)} ★</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Values</Text>
+        <Text style={styles.field}>{parsedValues.join(', ')}</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Value of well-being in the company</Text>
+        <Text style={styles.field}>Work-life Balance: {workLifeBalance}/10</Text>
+        <Text style={styles.field}>Flexibility: {flexibility}/10</Text>
+        <Text style={styles.field}>Mental Health: {mentalHealth}/10</Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Job Listings</Text>
+        {jobListings.map((job, index) => (
+          <Text key={index} style={styles.field}>
+            - {job.title} ({job.location})
+          </Text>
+        ))}
+      </View>
+
       <TouchableOpacity onPress={handleReview} style={styles.reviewButton}>
         <Text style={styles.reviewButtonText}>Leave review for company</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f4f4f4',
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  error: {
-    fontSize: 16,
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  jobListing: {
-    fontSize: 16,
-    color: '#555',
-  },
-  reviewButton: {
-    backgroundColor: '#0d6efd',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  reviewButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
 
 export default CompanyProfileScreen;
