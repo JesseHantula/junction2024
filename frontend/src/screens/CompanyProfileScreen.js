@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ActivityIndicator, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { GET_COMPANY, GET_COMPANY_REVIEWS_AVG_SCORE } from '../graphql/queries';
-import styles from '../styles/profileStyles';  // Import the new styles
+import styles from '../styles/profileStyles';
 
 const CompanyProfileScreen = ({ route, navigation }) => {
   const { companyName } = route.params;
