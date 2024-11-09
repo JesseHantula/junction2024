@@ -8,10 +8,9 @@ import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/matchStyles';
 import Spinner from '../utils/Animations';
 
-const MatchesScreen = () => {
+const MatchesScreen = ({ navigation }) => {  // Receive navigation prop
   const { accountType, userData } = useContext(AuthContext);
 
-  //handlePress and navigate to information Screen
   const variables = accountType === 'User'
     ? { username: userData.username }
     : { companyName: userData.name };
@@ -29,13 +28,21 @@ const MatchesScreen = () => {
   // Get only the top 100 matches
   const topMatches = data.match.slice(0, 100);
 
+  // Navigate to JobListingScreen with listingId
+  const handlePress = (listingId) => {
+    navigation.navigate('JobListingScreen', { listingId });
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={topMatches}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
+          <TouchableOpacity 
+            style={styles.card} 
+            onPress={() => handlePress(item.jobListing.id)}  // Pass job listing ID to the next screen
+          >
             <Text style={styles.companyName}>Job Title: {item.jobListing.title}</Text>
             <Text style={styles.matchScore}>Match Score: {item.score}</Text>
           </TouchableOpacity>
