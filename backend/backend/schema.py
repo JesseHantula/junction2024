@@ -157,9 +157,6 @@ class Query(graphene.ObjectType):
         for user in users:
             for company in companies:
                 score = len(set(user["values"]) & set(company["values"]))
-                score += len(
-                    set(user["working_habits"]) & set(company["working_habits"])
-                )
                 if score > 0:
                     matches.append(
                         MatchType(
