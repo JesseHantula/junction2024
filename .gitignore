@@ -1,1 +1,5 @@
 myenv
+__pycache__
+companies.json
+users.json
+db.sqlite3

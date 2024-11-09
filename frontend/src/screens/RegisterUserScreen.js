@@ -5,6 +5,7 @@ import Slider from '@react-native-community/slider';
 import { gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/registrationStyles'
+import { REGISTER_USER } from '../graphql/mutations';
 
 const REGISTER_USER = gql`
   mutation RegisterUser(
