@@ -100,10 +100,10 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('RegisterUser')}>
+      <TouchableOpacity onPress={() => navigation.navigate('User Registration')}>
         <Text style={styles.linkText}>Register as User</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('RegisterCompany')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Company Registration')}>
         <Text style={styles.linkText}>Register as Company</Text>
       </TouchableOpacity>
     </View>

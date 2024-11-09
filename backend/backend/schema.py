@@ -21,9 +21,10 @@ def save_data(file_name, data):
 class UserType(graphene.ObjectType):
     username = graphene.String()
     password = graphene.String()
+    gender = graphene.String()
+    race = graphene.String()
     values = graphene.List(graphene.String)
-    preferences = graphene.List(graphene.String)
-    working_habits = graphene.List(graphene.String)
+    working_style = graphene.String()
 
 
 class CompanyType(graphene.ObjectType):
@@ -38,9 +39,11 @@ class RegisterUser(graphene.Mutation):
     class Arguments:
         username = graphene.String(required=True)
         password = graphene.String(required=True)
+        birthday = graphene.Date()
+        gender = graphene.String(required=True)
+        race = graphene.String(required=True)
         values = graphene.List(graphene.String)
-        preferences = graphene.List(graphene.String)
-        working_habits = graphene.List(graphene.String)
+        working_style = graphene.String()
 
     success = graphene.Boolean()
     user = graphene.Field(UserType)
@@ -50,9 +53,11 @@ class RegisterUser(graphene.Mutation):
         info,
         username,
         password,
+        birthday,
+        gender,
+        race,
         values=None,
-        preferences=None,
-        working_habits=None,
+        working_style=None,
     ):
         users = load_data(USERS_FILE)
         for user in users:
@@ -61,9 +66,11 @@ class RegisterUser(graphene.Mutation):
         new_user = {
             "username": username,
             "password": password,
+            "birthday": birthday,
+            "gender": gender,
+            "race": race,
             "values": values or [],
-            "preferences": preferences or [],
-            "working_habits": working_habits or [],
+            "working_style": working_style
         }
         users.append(new_user)
         save_data(USERS_FILE, users)

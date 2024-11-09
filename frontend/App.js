@@ -20,8 +20,8 @@ const App = () => {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Login">
             <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="RegisterUser" component={RegisterUserScreen} />
-            <Stack.Screen name="RegisterCompany" component={RegisterCompanyScreen} />
+            <Stack.Screen name="User Registration" component={RegisterUserScreen} />
+            <Stack.Screen name="Company Registration" component={RegisterCompanyScreen} />
             <Stack.Screen
               name="Home"
               component={HomeScreen}
