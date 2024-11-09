@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import { gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
-import styles from '../styles/authStyles'
+import styles from '../styles/registrationStyles'
 
 const REGISTER_COMPANY = gql`
   mutation RegisterCompany(
@@ -99,8 +99,8 @@ const RegisterCompanyScreen = ({ navigation }) => {
     switch (step) {
       case 1:
         return (
-          <View>
-            <Text>Please enter your company name</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Please enter your company name</Text>
             <TextInput
               style={styles.input}
               value={formData.username}
@@ -110,8 +110,8 @@ const RegisterCompanyScreen = ({ navigation }) => {
         );
       case 2:
         return (
-          <View>
-            <Text>Please enter a password for your account</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Please enter a password for your account</Text>
             <TextInput
               style={styles.input}
               value={formData.password}
@@ -122,8 +122,8 @@ const RegisterCompanyScreen = ({ navigation }) => {
         )  
       case 3:
         return (
-          <View>
-            <Text>Select up to 3 values that best represent your company:</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Select up to 3 values that best represent your company:</Text>
             {coreValuesList.map(value => (
               <TouchableOpacity
                 key={value}
@@ -138,13 +138,12 @@ const RegisterCompanyScreen = ({ navigation }) => {
                 <Text style={styles.optionText}>{value}</Text>
               </TouchableOpacity>
             ))}
-            <Text>Selected Values: {formData.coreValues.join(', ')}</Text>
           </View>
         );
       default:
         return (
-          <View>
-            <Text>Review your information:</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Review your information:</Text>
             <Text>Company name: {formData.companyName}</Text>
             <Text>Core values: {formData.coreValues.join(', ')}</Text>
           </View>

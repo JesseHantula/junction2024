@@ -1,9 +1,10 @@
 // src/screens/LoginScreen.js
 
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
+import styles from '../styles/authStyles';
 
 const LOGIN_USER = gql`
   mutation LoginUser($username: String!, $password: String!) {
@@ -63,46 +64,48 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text>Login as:</Text>
-      <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-        <Button
-          title="User"
+    <View style={styles.container}>
+      <Text style={styles.title}>Login as:</Text>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
           onPress={() => setAccountType('User')}
-          color={accountType === 'User' ? 'blue' : 'gray'}
-        />
-        <Button
-          title="Company"
+          style={[styles.option, accountType === 'User' && styles.selectedOption]}
+        >
+          <Text style={[styles.optionText, accountType === 'User' && styles.selectedOptionText]}>User</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => setAccountType('Company')}
-          color={accountType === 'Company' ? 'blue' : 'gray'}
-        />
+          style={[styles.option, accountType === 'Company' && styles.selectedOption]}
+        >
+          <Text style={[styles.optionText, accountType === 'Company' && styles.selectedOptionText]}>Company</Text>
+        </TouchableOpacity>
       </View>
 
       <TextInput
         placeholder={accountType === 'User' ? 'Username' : 'Company Name'}
         value={username}
         onChangeText={setUsername}
-        style={{ marginBottom: 10 }}
+        style={styles.input}
       />
       <TextInput
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ marginBottom: 10 }}
+        style={styles.input}
       />
 
-      <Button title="Login" onPress={handleLogin} />
-      <Button
-        title="Register as User"
-        onPress={() => navigation.navigate('RegisterUser')}
-        style={{ marginTop: 10 }}
-      />
-      <Button
-        title="Register as Company"
-        onPress={() => navigation.navigate('RegisterCompany')}
-        style={{ marginTop: 10 }}
-      />
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('RegisterUser')}>
+        <Text style={styles.linkText}>Register as User</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('RegisterCompany')}>
+        <Text style={styles.linkText}>Register as Company</Text>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -3,7 +3,7 @@ import { View, Text, Button, TextInput, TouchableOpacity, Platform, Modal } from
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
-import styles from '../styles/authStyles'
+import styles from '../styles/registrationStyles'
 
 const REGISTER_USER = gql`
   mutation RegisterUser(
@@ -105,10 +105,11 @@ const RegisterUserScreen = ({ navigation }) => {
     switch (step) {
       case 1:
         return (
-          <View>
-            <Text>Please enter a username for our platform</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Create a Username</Text>
             <TextInput
               style={styles.input}
+              placeholder="Enter username"
               value={formData.username}
               onChangeText={value => handleInputChange('username', value)}
             />
@@ -116,33 +117,25 @@ const RegisterUserScreen = ({ navigation }) => {
         );
       case 2:
         return (
-          <View>
-            <Text>Please enter a password for your account</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Set Your Password</Text>
             <TextInput
               style={styles.input}
+              placeholder="Enter password"
               value={formData.password}
               onChangeText={value => handleInputChange('password', value)}
-              secureTextEntry={true}
+              secureTextEntry
             />
           </View>
-        )  
+        );
       case 3:
         return (
-          <View>
-            <Text>What is your birth date?</Text>
-            <TouchableOpacity
-              style={styles.input}
-              onPress={() => setShowDateModal(true)}
-            >
-              <Text>{formData.birthDate || 'Select Date'}</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Birth Date</Text>
+            <TouchableOpacity style={styles.input} onPress={() => setShowDateModal(true)}>
+              <Text style={styles.inputText}>{formData.birthDate || 'Select Date'}</Text>
             </TouchableOpacity>
-
-            <Modal
-              transparent
-              visible={showDateModal}
-              animationType="slide"
-              onRequestClose={() => setShowDateModal(false)}
-            >
+            <Modal transparent visible={showDateModal} animationType="slide" onRequestClose={() => setShowDateModal(false)}>
               <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                   <DateTimePicker
@@ -150,22 +143,11 @@ const RegisterUserScreen = ({ navigation }) => {
                     mode="date"
                     display={Platform.OS === 'ios' ? 'spinner' : 'calendar'}
                     maximumDate={new Date(2010, 11, 31)}
-                    onChange={(event, selectedDate) => {
-                      setTempDate(selectedDate || tempDate);
-                    }}
+                    onChange={(event, selectedDate) => setTempDate(selectedDate || tempDate)}
                   />
                   <View style={styles.modalButtons}>
-                    <Button
-                      title="Cancel"
-                      onPress={() => setShowDateModal(false)}
-                    />
-                    <Button
-                      title="Confirm"
-                      onPress={() => {
-                        handleInputChange('birthDate', tempDate.toISOString().split('T')[0]);
-                        setShowDateModal(false);
-                      }}
-                    />
+                    <Button title="Cancel" onPress={() => setShowDateModal(false)} />
+                    <Button title="Confirm" onPress={() => { handleInputChange('birthDate', tempDate.toISOString().split('T')[0]); setShowDateModal(false); }} />
                   </View>
                 </View>
               </View>
@@ -174,17 +156,10 @@ const RegisterUserScreen = ({ navigation }) => {
         );
       case 4:
         return (
-          <View>
-            <Text>Select your gender:</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Select Gender</Text>
             {['Male', 'Female', 'Other'].map(option => (
-              <TouchableOpacity
-                key={option}
-                style={[
-                  styles.option,
-                  formData.gender === option && styles.selectedOption,
-                ]}
-                onPress={() => handleInputChange('gender', option)}
-              >
+              <TouchableOpacity key={option} style={[styles.option, formData.gender === option && styles.selectedOption]} onPress={() => handleInputChange('gender', option)}>
                 <Text style={styles.optionText}>{option}</Text>
               </TouchableOpacity>
             ))}
@@ -192,19 +167,10 @@ const RegisterUserScreen = ({ navigation }) => {
         );
       case 5:
         return (
-          <View>
-            <Text>Select your race:</Text>
-            {['Asian', 'Black or African American', 'Hispanic or Latino',
-              'White', 'Native American'
-            ].map(option => (
-              <TouchableOpacity
-                key={option}
-                style={[
-                  styles.option,
-                  formData.race === option && styles.selectedOption,
-                ]}
-                onPress={() => handleInputChange('race', option)}
-              >
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Choose Race</Text>
+            {['Asian', 'Black or African American', 'Hispanic or Latino', 'White', 'Native American'].map(option => (
+              <TouchableOpacity key={option} style={[styles.option, formData.race === option && styles.selectedOption]} onPress={() => handleInputChange('race', option)}>
                 <Text style={styles.optionText}>{option}</Text>
               </TouchableOpacity>
             ))}
@@ -212,8 +178,8 @@ const RegisterUserScreen = ({ navigation }) => {
         );
       case 6:
         return (
-          <View>
-            <Text>Select up to 3 core values:</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Core Values (Choose up to 3)</Text>
             {coreValuesList.map(value => (
               <TouchableOpacity
                 key={value}
@@ -228,19 +194,18 @@ const RegisterUserScreen = ({ navigation }) => {
                 <Text style={styles.optionText}>{value}</Text>
               </TouchableOpacity>
             ))}
-            <Text>Selected Values: {formData.coreValues.join(', ')}</Text>
           </View>
         );
       case 7:
         return (
-          <View>
-            <Text>Which working style best aligns with you?</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Which working style best aligns with you?</Text>
             {['Collaborative', 'Independent'].map(option => (
               <TouchableOpacity
                 key={option}
                 style={[
                   styles.option,
-                  formData.workingStyle === option && styles.selectedOption,
+                  formData.workingStyle.includes(option) && styles.selectedOption,
                 ]}
                 onPress={() => handleInputChange('workingStyle', option)}
               >
@@ -251,8 +216,8 @@ const RegisterUserScreen = ({ navigation }) => {
         )  
       default:
         return (
-          <View>
-            <Text>Review your information:</Text>
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Review your information:</Text>
             <Text>Username: {formData.username}</Text>
             <Text>Date of Birth: {formData.birthDate}</Text>
             <Text>Gender: {formData.gender}</Text>
