@@ -14,7 +14,7 @@ const CompanyDashboard = () => {
     description: '',
     requirements: '',
     location: '',
-    workType: 'onsite',
+    workType: 'Onsite',
     salary: '',
     workingStyle: 'Independent'
   });
@@ -42,7 +42,7 @@ const CompanyDashboard = () => {
         requirements: requirementsArray,
         location: jobDetails.location,
         workType: jobDetails.workType,
-        salary: parseFloat(jobDetails.salary),
+        salary: parseInt(jobDetails.salary),
         workingStyle: jobDetails.workingStyle
       },
     })
@@ -54,7 +54,7 @@ const CompanyDashboard = () => {
             description: '',
             requirements: '',
             location: '',
-            workType: 'onsite', // Reset to default
+            workType: 'Onsite', // Reset to default
             salary: '',
           });
         } else {

@@ -60,6 +60,7 @@ class JobListingType(DjangoObjectType):
             "posted_date",
             "salary",
             "company",
+            "working_style",
         )
 
 

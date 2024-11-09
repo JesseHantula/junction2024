@@ -89,8 +89,8 @@ export const CREATE_JOB_LISTING = gql`
     $description: String!
     $requirements: [String]
     $location: String
-    $workType: String
-    $salary: Float
+    $workType: String!
+    $salary: Int
     $workingStyle: String
   ) {
     createJobListing(

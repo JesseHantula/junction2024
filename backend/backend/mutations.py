@@ -120,11 +120,12 @@ class CreateJobListing(graphene.Mutation):
         requirements = graphene.List(graphene.String)
         location = graphene.String()
         work_type = graphene.String(required=True)
-        salary = graphene.Float()
+        salary = graphene.Int()
         working_style = graphene.String()
 
     success = graphene.Boolean()
     job_listing = graphene.Field(JobListingType)
+    errors = graphene.List(graphene.String)
 
     def mutate(
         self,
@@ -164,8 +165,10 @@ class CreateJobListing(graphene.Mutation):
                     working_style=job_listing.working_style,
                 ),
             )
-        except Company.DoesNotExist:
-            return CreateJobListing(success=False, job_listing=None)
+        except Exception as e:
+            # Catch any other unexpected errors during job creation
+            es = [str(e)]
+            return CreateJobListing(success=False, job_listing=None, errors=es)
 
 
 class LoginCompany(graphene.Mutation):
