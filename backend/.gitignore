@@ -1,4 +1,2 @@
-__pycache__
-companies.json
-users.json
-db.sqlite3
+__pycache__/
+*.pyc
