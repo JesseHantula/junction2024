@@ -37,10 +37,8 @@ const CompanyDashboard = () => {
     setJobDetails((prevDetails) => {
       const { requirements } = prevDetails;
       if (requirements.includes(skill)) {
-        // Remove the skill if it's already selected
         return { ...prevDetails, requirements: requirements.filter(req => req !== skill) };
       } else if (requirements.length < 8) {
-        // Add the skill if it's not selected and the limit hasn't been reached
         return { ...prevDetails, requirements: [...requirements, skill] };
       }
       return prevDetails;

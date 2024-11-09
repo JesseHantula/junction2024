@@ -16,23 +16,24 @@ const CompanyMatches = ({ companyName, navigation }) => {
 
   const topMatches = data.match.slice(0, 100);
 
-  const handlePress = (listingId) => {
-    navigation.navigate('JobListingScreen', { listingId });
+  const handlePress = (username) => {
+    navigation.navigate('UserScreen', { username: username });
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Potential job candidates</Text>
       <FlatList
         data={topMatches}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity 
             style={styles.card} 
-            onPress={() => handlePress(item.jobListing.id)}
+            onPress={() => handlePress(item.user.username)}
           >
-            <Text style={styles.companyName}>Job Title: {item.jobListing.title}</Text>
-            <Text style={styles.matchScore}>User ID: {item.user.id}</Text>
-            <Text style={styles.matchScore}>Match Score: {item.score}</Text>
+            <Text style={styles.companyName}>Anonymous user {item.user.id}</Text>
+            <Text style={styles.matchScore}>Suitable job: {item.jobListing.title}</Text>
+            <Text style={styles.matchScore}>Match score: {item.score}%</Text>
           </TouchableOpacity>
         )}
       />

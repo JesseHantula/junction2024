@@ -31,7 +31,7 @@ const UserMatches = ({ username, navigation }) => {
             onPress={() => handlePress(item.jobListing.id)}
           >
             <Text style={styles.companyName}>Job Title: {item.jobListing.title}</Text>
-            <Text style={styles.matchScore}>Match Score: {item.score}</Text>
+            <Text style={styles.matchScore}>Match Score: {item.score}%</Text>
           </TouchableOpacity>
         )}
       />

@@ -46,7 +46,6 @@ const JobListingScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.company}>Company: {company.name}</Text>
       <Text style={styles.sectionHeader}>Job Description</Text>
       <Text style={styles.description}>{description}</Text>
       <Text style={styles.sectionHeader}>Requirements</Text>
