@@ -45,7 +45,6 @@ const SearchCompanyScreen = ({ navigation }) => {
         renderItem={({ item }) => (
             <TouchableOpacity style={styles.companyCard} onPress={() => handleCompanyPress(item.name)}>
             <Text style={styles.companyName}>{item.name}</Text>
-            <Text>Values: {Array.isArray(item.values) ? item.values.join(', ') : 'No values provided'}</Text>
             {item.jobListings?.length > 0 && (
               <Text>Job Listings:</Text>
             )}

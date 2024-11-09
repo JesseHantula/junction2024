@@ -1,26 +1,39 @@
 import React from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useQuery } from '@apollo/client';
-import { GET_COMPANY } from '../graphql/queries';
+import { GET_COMPANY, GET_COMPANY_REVIEWS_AVG_SCORE } from '../graphql/queries';
 
 const CompanyProfileScreen = ({ route, navigation }) => {
   const { companyName } = route.params;
 
-  const { loading, error, data } = useQuery(GET_COMPANY, {
+  const { loading: loadingCompany, error: errorCompany, data: companyData } = useQuery(GET_COMPANY, {
     variables: { name: companyName },
   });
 
-  if (loading) return <ActivityIndicator style={styles.loading} size="large" color="#0000ff" />;
-  if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
+  const { loading: loadingAvgScore, error: errorAvgScore, data: avgScoreData } = useQuery(GET_COMPANY_REVIEWS_AVG_SCORE, {
+    variables: { companyName },
+  });
 
-  const { name, values, workLifeBalance, flexibility, mentalHealth, jobListings } = data.company;
+  if (loadingCompany || loadingAvgScore) {
+    return <ActivityIndicator style={styles.loading} size="large" color="#0000ff" />;
+  }
+  if (errorCompany) {
+    return <Text style={styles.error}>Error: {errorCompany.message}</Text>;
+  }
+  if (errorAvgScore) {
+    return <Text style={styles.error}>Error loading average rating: {errorAvgScore.message}</Text>;
+  }
+
+  const { name, values, workLifeBalance, flexibility, mentalHealth, jobListings } = companyData.company;
+
+  const averageStars = avgScoreData.companyReviewsAvgScore || 5;
 
   parsedValues = typeof values === 'string' ? JSON.parse(values) : values;
 
   const handleReview = () => {
-    Alert.alert("Warning", "Please only leave a review if you are currently employed at the company.")
-    navigation.navigate('CompanyReviewScreen', { name: companyName })
-  }
+    Alert.alert("Warning", "Please only leave a review if you are currently employed at the company.");
+    navigation.navigate('CompanyReviewScreen', { name: companyName });
+  };
 
   return (
     <View style={styles.container}>
@@ -29,6 +42,7 @@ const CompanyProfileScreen = ({ route, navigation }) => {
       <Text>Work-Life Balance: {workLifeBalance}</Text>
       <Text>Flexibility: {flexibility}</Text>
       <Text>Mental Health: {mentalHealth}</Text>
+      <Text>Average Rating: {averageStars.toFixed(1)} ★</Text>
       <Text>Job Listings:</Text>
       {jobListings.map((job, index) => (
         <Text key={index} style={styles.jobListing}>

@@ -173,3 +173,10 @@ export const GET_MATCHES = gql`
   }
 }
 `;
+
+export const GET_COMPANY_REVIEWS_AVG_SCORE = gql`
+  query GetCompanyReviewsAvgScore($companyName: String!) {
+    companyReviewsAvgScore(companyName: $companyName)
+  }
+`;
+
