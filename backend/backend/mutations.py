@@ -76,8 +76,6 @@ class RegisterCompany(graphene.Mutation):
         name = graphene.String(required=True)
         password = graphene.String(required=True)
         values = graphene.List(graphene.String)
-        preferences = graphene.List(graphene.String)
-        working_habits = graphene.List(graphene.String)
         work_life_balance = graphene.Int()
         flexibility = graphene.Int()
         mental_health = graphene.Int()
@@ -94,8 +92,6 @@ class RegisterCompany(graphene.Mutation):
         flexibility,
         mental_health,
         values=None,
-        preferences=None,
-        working_habits=None,
     ):
 
         if Company.objects.filter(name=name).exists():
@@ -105,8 +101,6 @@ class RegisterCompany(graphene.Mutation):
             name=name,
             password=password,
             values=values or [],
-            preferences=preferences or [],
-            working_habits=working_habits or [],
             work_life_balance=work_life_balance,
             flexibility=flexibility,
             mental_health=mental_health,
