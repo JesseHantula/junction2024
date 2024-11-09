@@ -3,7 +3,7 @@
 import graphene
 import random
 from .models import User, Company, JobListing
-from .types import UserType, CompanyType, JobListingType
+from .types import UserType, CompanyType, JobListingType, WorkTypeChoicesEnum
 
 
 class RegisterUser(graphene.Mutation):
@@ -116,7 +116,7 @@ class CreateJobListing(graphene.Mutation):
         description = graphene.String(required=True)
         requirements = graphene.List(graphene.String)
         location = graphene.String()
-        work_type = graphene.String()
+        work_type = graphene.String(required=True)
         salary = graphene.Float()
         working_style = graphene.String()
 
@@ -133,19 +133,20 @@ class CreateJobListing(graphene.Mutation):
         location=None,
         work_type="onsite",
         salary=None,
-        working_style=None
+        working_style=None,
     ):
         try:
             company = Company.objects.get(name=company_name)
+            normalized_work_type = WorkTypeChoicesEnum.from_string(work_type).value
             job_listing = JobListing.objects.create(
                 company=company,
                 title=title,
                 description=description,
                 requirements=requirements or [],
                 location=location,
-                work_type=work_type,
+                work_type=normalized_work_type,
                 salary=salary,
-                working_style=working_style
+                working_style=working_style,
             )
             return CreateJobListing(
                 success=True,
@@ -157,7 +158,7 @@ class CreateJobListing(graphene.Mutation):
                     work_type=job_listing.work_type,
                     posted_date=job_listing.posted_date,
                     salary=job_listing.salary,
-                    working_style=job_listing.working_style
+                    working_style=job_listing.working_style,
                 ),
             )
         except Company.DoesNotExist:
