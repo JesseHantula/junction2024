@@ -5,6 +5,7 @@ import graphene
 from .models import User, Company, JobListing, Request
 from .types import UserType, CompanyType, JobListingType, MatchType, RequestType
 from .mutations import Mutation
+from django.db.models import Avg
 
 
 class Query(graphene.ObjectType):
@@ -23,33 +24,39 @@ class Query(graphene.ObjectType):
     requests = graphene.List(RequestType)
     requests_by_company = graphene.List(RequestType, company_id=graphene.Int(required=True))
 
+    company_reviews_avg_score = graphene.Float(
+        company_name=graphene.String(required=True)
+    )
 
-    # Resolve a single user by username
+    def resolve_company_reviews_avg_score(self, info, company_name):
+        try:
+            company = Company.objects.get(name=company_name)
+            avg_score = company.company_reviews.aggregate(Avg("stars"))["stars__avg"]
+            return avg_score if avg_score is not None else 5.0
+        except Company.DoesNotExist:
+            return None
+
     def resolve_user(self, info, username):
         try:
             return User.objects.get(username=username)
         except User.DoesNotExist:
             return None
 
-    # Resolve a single company by name
     def resolve_company(self, info, name):
         try:
             return Company.objects.get(name=name)
         except Company.DoesNotExist:
             return None
 
-    # Resolve a single job listing by ID
     def resolve_job_listing(self, info, id):
         try:
             return JobListing.objects.get(id=id)
         except JobListing.DoesNotExist:
             return None
 
-    # Resolve all job listings
     def resolve_job_listings(self, info):
         return JobListing.objects.all()
 
-    # Resolve job listings by a specific company
     def resolve_job_listings_by_company(self, info, company_name):
         try:
             company = Company.objects.get(name=company_name)
@@ -57,15 +64,12 @@ class Query(graphene.ObjectType):
         except Company.DoesNotExist:
             return []
 
-    # Resolve all users
     def resolve_users(self, info):
         return User.objects.all()
 
-    # Resolve all companies
     def resolve_companies(self, info):
         return Company.objects.all()
 
-    # Matching logic between users and companies
     def resolve_match(self, info, username=None, company_name=None):
         matches = []
 
