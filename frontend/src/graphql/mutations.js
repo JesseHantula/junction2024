@@ -29,6 +29,9 @@ export const REGISTER_COMPANY = gql`
     $values: [String]
     $preferences: [String]
     $workingHabits: [String]
+    $workLifeBalance: Int
+    $flexibility: Int
+    $mentalHealth: Int
   ) {
     registerCompany(
       name: $name
@@ -36,6 +39,9 @@ export const REGISTER_COMPANY = gql`
       values: $values
       preferences: $preferences
       workingHabits: $workingHabits
+      workLifeBalance: $workLifeBalance
+      flexibility: $flexibility
+      mentalHealth: $mentalHealth
     ) {
       success
       company {

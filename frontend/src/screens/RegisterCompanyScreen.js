@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
+import Slider from '@react-native-community/slider';
 import styles from '../styles/registrationStyles'
 import { REGISTER_COMPANY } from '../graphql/mutations';
 
@@ -16,6 +17,9 @@ const RegisterCompanyScreen = ({ navigation }) => {
       values: formData.coreValues,
       preferences: null,
       workingHabits: null,
+      workLifeBalance: formData.workLifeBalance,
+      flexibility: formData.flexibility,
+      mentalHealth: formData.mentalHealth
     };
 
     registerCompany({ variables })
@@ -37,6 +41,9 @@ const RegisterCompanyScreen = ({ navigation }) => {
     password: '',
     coreValues: [],
     workingStyle: '',
+    workLifeBalance: 5,
+    flexibility: 5,
+    mentalHealth: 5
   });
 
   const coreValuesList = [
@@ -118,6 +125,41 @@ const RegisterCompanyScreen = ({ navigation }) => {
             ))}
           </View>
         );
+      case 4:
+        return (
+          <View style={styles.stepContainer}>
+            <Text style={styles.header}>Please answer the following questions from the scale of 1 to 10 on how important each one is for your company</Text>
+            <Text style={styles.subheader}>Work-life balance: {formData.workLifeBalance}</Text>
+            <Slider
+              style={{ width: '100%', height: 40 }}
+              minimumValue={1}
+              maximumValue={10}
+              step={1}
+              value={formData.workLifeBalance}
+              onValueChange={value => handleInputChange('workLifeBalance', value)}
+            />
+
+            <Text style={styles.subheader}>Flexible hours and working location: {formData.flexibility}</Text>
+            <Slider
+              style={{ width: '100%', height: 40 }}
+              minimumValue={1}
+              maximumValue={10}
+              step={1}
+              value={formData.flexibility}
+              onValueChange={value => handleInputChange('flexibility', value)}
+            />
+
+            <Text style={styles.subheader}>The priority of mental health in the workplace: {formData.mentalHealth}</Text>
+            <Slider
+              style={{ width: '100%', height: 40 }}
+              minimumValue={1}
+              maximumValue={10}
+              step={1}
+              value={formData.mentalHealth}
+              onValueChange={value => handleInputChange('mentalHealth', value)}
+            />
+          </View>
+        );    
       default:
         return (
           <View style={styles.stepContainer}>
@@ -134,7 +176,7 @@ const RegisterCompanyScreen = ({ navigation }) => {
       {renderStep()}
       <View style={styles.buttonContainer}>
         {step > 1 && <Button title="Back" onPress={prevStep} />}
-        <Button title={step < 4 ? "Next" : "Finish"} onPress={step < 4 ? nextStep : handleRegister} />
+        <Button title={step < 5 ? "Next" : "Finish"} onPress={step < 5 ? nextStep : handleRegister} />
       </View>
     </View>
   );
