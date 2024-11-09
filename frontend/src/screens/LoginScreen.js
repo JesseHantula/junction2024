@@ -1,7 +1,7 @@
 // src/screens/LoginScreen.js
 
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/authStyles';
@@ -44,6 +44,8 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../../assets/logo.png')} style={styles.logo} />
+
       <Text style={styles.title}>Login as:</Text>
 
       <View style={styles.buttonContainer}>

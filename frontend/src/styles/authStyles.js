@@ -67,6 +67,18 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontSize: 15,
   },
+  logoContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
 });
 
 export default styles;
