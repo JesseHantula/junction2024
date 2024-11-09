@@ -23,8 +23,6 @@ export const GET_COMPANY = gql`
       id
       name
       values
-      preferences
-      workingHabits
       workLifeBalance
       flexibility
       mentalHealth

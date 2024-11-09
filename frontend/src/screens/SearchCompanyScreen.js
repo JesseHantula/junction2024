@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, FlatList, Text } from 'react-native';
+import { View, TextInput, Button, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
 import { useLazyQuery } from '@apollo/client';
 import { GET_ALL_COMPANY_NAMES } from '../graphql/queries';
 
-const SearchCompanyScreen = () => {
+const SearchCompanyScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredCompanies, setFilteredCompanies] = useState([]);
 
@@ -11,6 +11,10 @@ const SearchCompanyScreen = () => {
 
   const handleSearch = () => {
     getAllCompanies();
+  };
+
+  const handleCompanyPress = (companyName) => {
+    navigation.navigate('CompanyProfileScreen', { companyName });
   };
 
   React.useEffect(() => {
@@ -39,12 +43,9 @@ const SearchCompanyScreen = () => {
         data={filteredCompanies}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.companyCard}>
+            <TouchableOpacity style={styles.companyCard} onPress={() => handleCompanyPress(item.name)}>
             <Text style={styles.companyName}>{item.name}</Text>
             <Text>Values: {Array.isArray(item.values) ? item.values.join(', ') : 'No values provided'}</Text>
-            <Text>Work-Life Balance: {item.workLifeBalance}</Text>
-            <Text>Flexibility: {item.flexibility}</Text>
-            <Text>Mental Health: {item.mentalHealth}</Text>
             {item.jobListings?.length > 0 && (
               <Text>Job Listings:</Text>
             )}
@@ -53,7 +54,7 @@ const SearchCompanyScreen = () => {
                 - {job.title} ({job.location})
               </Text>
             ))}
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
