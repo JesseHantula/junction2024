@@ -15,8 +15,6 @@ const RegisterCompanyScreen = ({ navigation }) => {
       name: formData.companyName,
       password: formData.password,
       values: formData.coreValues,
-      preferences: null,
-      workingHabits: null,
       workLifeBalance: formData.workLifeBalance,
       flexibility: formData.flexibility,
       mentalHealth: formData.mentalHealth

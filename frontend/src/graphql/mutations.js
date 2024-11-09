@@ -27,8 +27,6 @@ export const REGISTER_COMPANY = gql`
     $name: String!
     $password: String!
     $values: [String]
-    $preferences: [String]
-    $workingHabits: [String]
     $workLifeBalance: Int
     $flexibility: Int
     $mentalHealth: Int
@@ -37,8 +35,6 @@ export const REGISTER_COMPANY = gql`
       name: $name
       password: $password
       values: $values
-      preferences: $preferences
-      workingHabits: $workingHabits
       workLifeBalance: $workLifeBalance
       flexibility: $flexibility
       mentalHealth: $mentalHealth
@@ -93,6 +89,7 @@ export const CREATE_JOB_LISTING = gql`
     $location: String
     $workType: String
     $salary: Float
+    $workingStyle: String
   ) {
     createJobListing(
       companyName: $companyName
@@ -102,6 +99,7 @@ export const CREATE_JOB_LISTING = gql`
       location: $location
       workType: $workType
       salary: $salary
+      workingStyle: $workingStyle
     ) {
       success
       jobListing {
@@ -112,6 +110,7 @@ export const CREATE_JOB_LISTING = gql`
         workType
         postedDate
         salary
+        workingStyle
       }
     }
   }

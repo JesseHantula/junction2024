@@ -65,36 +65,91 @@ class Query(graphene.ObjectType):
     # Matching logic between users and companies
     def resolve_match(self, info, username=None, company_name=None):
         matches = []
+
+        # Define weights for different compatibility factors
+        WEIGHTS = {
+            "values_match": 0.4,
+            "work_life_balance": 0.2,
+            "flexibility": 0.2,
+            "mental_health": 0.1,
+            "working_style": 0.1,
+        }
+
+        def calculate_compatibility_score(user, job_listing):
+            score = 0
+            company = job_listing.company
+
+            # Values match (overlap of user and company values)
+            shared_values = set(user.values) & set(company.values)
+            values_score = len(shared_values) / len(user.values) if user.values else 0
+            score += values_score * WEIGHTS["values_match"]
+
+            # Work-life balance compatibility (difference in user and company scores)
+            balance_diff = abs(user.work_life_balance - company.work_life_balance)
+            balance_score = max(0, 1 - balance_diff / 10)
+            score += balance_score * WEIGHTS["work_life_balance"]
+
+            # Flexibility compatibility
+            flexibility_diff = abs(user.flexibility - company.flexibility)
+            flexibility_score = max(0, 1 - flexibility_diff / 10)
+            score += flexibility_score * WEIGHTS["flexibility"]
+
+            # Mental health compatibility
+            mental_health_diff = abs(user.mental_health - company.mental_health)
+            mental_health_score = max(0, 1 - mental_health_diff / 10)
+            score += mental_health_score * WEIGHTS["mental_health"]
+
+            # Working style compatibility (direct match between user and job listing working style)
+            working_style_score = (
+                1 if user.working_style == job_listing.working_style else 0
+            )
+            score += working_style_score * WEIGHTS["working_style"]
+
+            # Scale to 0-100
+            return int(score * 100)
+
+        # If a username is provided, find matches for the user with all job listings
         if username:
             try:
                 user = User.objects.get(username=username)
-                companies = Company.objects.all()
-                for company in companies:
-                    score = random.randint(1, 100)
+                job_listings = JobListing.objects.select_related("company")
+                if company_name:
+                    job_listings = job_listings.filter(company__name=company_name)
+
+                for job_listing in job_listings:
+                    score = calculate_compatibility_score(user, job_listing)
                     matches.append(
                         MatchType(
                             user=user,
-                            company=company,
+                            job_listing=job_listing,
                             score=score,
                         )
                     )
             except User.DoesNotExist:
                 return []
+
+        # If a company name is provided without a username, match all users with that company's job listings
         elif company_name:
             try:
                 company = Company.objects.get(name=company_name)
+                job_listings = JobListing.objects.filter(company=company)
                 users = User.objects.all()
-                for user in users:
-                    score = random.randint(1, 100)
-                    matches.append(
-                        MatchType(
-                            user=user,
-                            company=company,
-                            score=score,
+
+                for job_listing in job_listings:
+                    for user in users:
+                        score = calculate_compatibility_score(user, job_listing)
+                        matches.append(
+                            MatchType(
+                                user=user,
+                                job_listing=job_listing,
+                                score=score,
+                            )
                         )
-                    )
             except Company.DoesNotExist:
                 return []
+
+        # Sort matches by score in descending order
+        matches.sort(key=lambda x: x.score, reverse=True)
         return matches
 
 

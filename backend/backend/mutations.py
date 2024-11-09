@@ -3,7 +3,7 @@
 import graphene
 import random
 from .models import User, Company, JobListing
-from .types import UserType, CompanyType, JobListingType
+from .types import UserType, CompanyType, JobListingType, WorkTypeChoicesEnum
 
 
 class RegisterUser(graphene.Mutation):
@@ -76,8 +76,6 @@ class RegisterCompany(graphene.Mutation):
         name = graphene.String(required=True)
         password = graphene.String(required=True)
         values = graphene.List(graphene.String)
-        preferences = graphene.List(graphene.String)
-        working_habits = graphene.List(graphene.String)
         work_life_balance = graphene.Int()
         flexibility = graphene.Int()
         mental_health = graphene.Int()
@@ -94,8 +92,6 @@ class RegisterCompany(graphene.Mutation):
         flexibility,
         mental_health,
         values=None,
-        preferences=None,
-        working_habits=None,
     ):
 
         if Company.objects.filter(name=name).exists():
@@ -105,8 +101,6 @@ class RegisterCompany(graphene.Mutation):
             name=name,
             password=password,
             values=values or [],
-            preferences=preferences or [],
-            working_habits=working_habits or [],
             work_life_balance=work_life_balance,
             flexibility=flexibility,
             mental_health=mental_health,
@@ -122,8 +116,9 @@ class CreateJobListing(graphene.Mutation):
         description = graphene.String(required=True)
         requirements = graphene.List(graphene.String)
         location = graphene.String()
-        work_type = graphene.String()
+        work_type = graphene.String(required=True)
         salary = graphene.Float()
+        working_style = graphene.String()
 
     success = graphene.Boolean()
     job_listing = graphene.Field(JobListingType)
@@ -138,17 +133,20 @@ class CreateJobListing(graphene.Mutation):
         location=None,
         work_type="onsite",
         salary=None,
+        working_style=None,
     ):
         try:
             company = Company.objects.get(name=company_name)
+            normalized_work_type = WorkTypeChoicesEnum.from_string(work_type).value
             job_listing = JobListing.objects.create(
                 company=company,
                 title=title,
                 description=description,
                 requirements=requirements or [],
                 location=location,
-                work_type=work_type,
+                work_type=normalized_work_type,
                 salary=salary,
+                working_style=working_style,
             )
             return CreateJobListing(
                 success=True,
@@ -160,6 +158,7 @@ class CreateJobListing(graphene.Mutation):
                     work_type=job_listing.work_type,
                     posted_date=job_listing.posted_date,
                     salary=job_listing.salary,
+                    working_style=job_listing.working_style,
                 ),
             )
         except Company.DoesNotExist:
