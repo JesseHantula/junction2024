@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { GET_COMPANY } from '../graphql/queries';
 
-const CompanyProfileScreen = ({ route }) => {
+const CompanyProfileScreen = ({ route, navigation }) => {
   const { companyName } = route.params;
 
   const { loading, error, data } = useQuery(GET_COMPANY, {
@@ -16,6 +16,11 @@ const CompanyProfileScreen = ({ route }) => {
   const { name, values, workLifeBalance, flexibility, mentalHealth, jobListings } = data.company;
 
   parsedValues = typeof values === 'string' ? JSON.parse(values) : values;
+
+  const handleReview = () => {
+    Alert.alert("Warning", "Please only leave a review if you are currently employed at the company.")
+    navigation.navigate('CompanyReviewScreen', { name: companyName })
+  }
 
   return (
     <View style={styles.container}>
@@ -30,6 +35,9 @@ const CompanyProfileScreen = ({ route }) => {
           - {job.title} ({job.location})
         </Text>
       ))}
+      <TouchableOpacity onPress={handleReview} style={styles.reviewButton}>
+        <Text style={styles.reviewButtonText}>Leave review for company</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -60,6 +68,18 @@ const styles = StyleSheet.create({
   jobListing: {
     fontSize: 16,
     color: '#555',
+  },
+  reviewButton: {
+    backgroundColor: '#0d6efd',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  reviewButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
