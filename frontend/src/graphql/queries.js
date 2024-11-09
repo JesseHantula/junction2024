@@ -127,8 +127,8 @@ export const GET_ALL_COMPANIES = gql`
 `;
 
 export const GET_MATCHES = gql`
-  query GetMatches {
-    match {
+  query GetMatches($username: String, $companyName: String) {
+    match(username: $username, companyName: $companyName) {
       user {
         username
         values
