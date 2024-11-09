@@ -19,7 +19,7 @@ const App = () => {
       <AuthProvider>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
             <Stack.Screen name="User Registration" component={RegisterUserScreen} />
             <Stack.Screen name="Company Registration" component={RegisterCompanyScreen} />
             <Stack.Screen
