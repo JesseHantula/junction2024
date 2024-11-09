@@ -29,6 +29,12 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+class CompanyReview(models.Model):
+    company = models.ForeignKey(
+        Company, on_delete=models.CASCADE, related_name="company_reviews"
+    )
+    review = models.TextField()
+    stars = models.IntegerField(default=3)
 
 class JobListing(models.Model):
     company = models.ForeignKey(

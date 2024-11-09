@@ -13,6 +13,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import MatchesScreen from './src/screens/MatchesScreen'; // Import MatchesScreen
 import JobListingScreen from './src/screens/JobListingScreen'; // Import JobListingScreen
 import CompanyProfileScreen from './src/screens/CompanyProfileScreen';
+import CompanyReviewScreen from './src/screens/CompanyReviewScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,11 @@ const App = () => {
               name="CompanyProfileScreen" 
               component={CompanyProfileScreen} 
               options={{ title: 'Company Profile' }} 
+            />
+            <Stack.Screen
+              name="CompanyReviewScreen"
+              component={CompanyReviewScreen}
+              options={{ title: 'Company Review' }}
             />
           </Stack.Navigator>
         </NavigationContainer>
