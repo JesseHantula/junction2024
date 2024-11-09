@@ -9,6 +9,7 @@ import ProfileScreen from './ProfileScreen';
 import SettingsScreen from './SettingsScreen';
 import SearchCompanyScreen from './SearchCompanyScreen';
 import CompanyDashboard from './CompanyDashboard'; // Import the component here
+import CompanyListings from './CompanyListings'; // Import the component here
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -31,7 +32,10 @@ const HomeScreen = () => {
       <Drawer.Screen name="Mindlink" component={TabNavigator} initialParams={{ accountType }}/>
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       {accountType === 'Company' && (
-        <Drawer.Screen name="CompanyDashboard" component={CompanyDashboard} />
+        <Drawer.Screen name="Add Job Listings" component={CompanyDashboard} />
+      )}
+      {accountType === 'Company' && (
+        <Drawer.Screen name="View Job Listings" component={CompanyListings} />
       )}
     </Drawer.Navigator>
   );

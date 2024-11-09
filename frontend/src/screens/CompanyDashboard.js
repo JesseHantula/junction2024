@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { ScrollView, Text, TextInput, Button, Alert } from 'react-native';
+import { ScrollView, Text, TextInput, Button, Alert, View, TouchableOpacity } from 'react-native';
 import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import { Picker } from '@react-native-picker/picker'; // Updated import
 import { CREATE_JOB_LISTING } from '../graphql/mutations';
+import { SKILLS } from '../constants/constants'; // Updated import
+
 
 const CompanyDashboard = () => {
   const { accountType, userData } = useContext(AuthContext);
@@ -12,7 +14,7 @@ const CompanyDashboard = () => {
   const [jobDetails, setJobDetails] = useState({
     title: '',
     description: '',
-    requirements: '',
+    requirements: [],
     location: '',
     workType: 'Onsite',
     salary: '',
@@ -31,15 +33,27 @@ const CompanyDashboard = () => {
     setJobDetails({ ...jobDetails, [field]: value });
   };
 
-  const handleAddJobListing = () => {
-    const requirementsArray = jobDetails.requirements.split(',').map(req => req.trim());
+  const toggleSkill = (skill) => {
+    setJobDetails((prevDetails) => {
+      const { requirements } = prevDetails;
+      if (requirements.includes(skill)) {
+        // Remove the skill if it's already selected
+        return { ...prevDetails, requirements: requirements.filter(req => req !== skill) };
+      } else if (requirements.length < 8) {
+        // Add the skill if it's not selected and the limit hasn't been reached
+        return { ...prevDetails, requirements: [...requirements, skill] };
+      }
+      return prevDetails;
+    });
+  };
 
+  const handleAddJobListing = () => {
     createJobListing({
       variables: {
         companyName: userData.name,
         title: jobDetails.title,
         description: jobDetails.description,
-        requirements: requirementsArray,
+        requirements: jobDetails.requirements,
         location: jobDetails.location,
         workType: jobDetails.workType,
         salary: parseInt(jobDetails.salary),
@@ -52,10 +66,11 @@ const CompanyDashboard = () => {
           setJobDetails({
             title: '',
             description: '',
-            requirements: '',
+            requirements: [],
             location: '',
             workType: 'Onsite', // Reset to default
             salary: '',
+            workingStyle: 'Independent'
           });
         } else {
           Alert.alert("Error", "Failed to create job listing.");
@@ -84,12 +99,21 @@ const CompanyDashboard = () => {
         style={{ marginBottom: 10, padding: 10, borderWidth: 1, borderRadius: 5 }}
       />
 
-      <TextInput
-        placeholder="Requirements (comma separated)"
-        value={jobDetails.requirements}
-        onChangeText={value => handleInputChange('requirements', value)}
-        style={{ marginBottom: 10, padding: 10, borderWidth: 1, borderRadius: 5 }}
-      />
+      <Text style={{ marginBottom: 5 }}>Requirements (Select up to 8)</Text>
+      {SKILLS.map((skill) => (
+        <TouchableOpacity
+          key={skill}
+          onPress={() => toggleSkill(skill)}
+          style={{
+            padding: 10,
+            marginVertical: 5,
+            backgroundColor: jobDetails.requirements.includes(skill) ? '#add8e6' : '#f0f0f0',
+            borderRadius: 5,
+          }}
+        >
+          <Text>{skill}</Text>
+        </TouchableOpacity>
+      ))}
 
       <TextInput
         placeholder="Location"
@@ -117,6 +141,7 @@ const CompanyDashboard = () => {
         style={{ marginBottom: 20, padding: 10, borderWidth: 1, borderRadius: 5 }}
       />
 
+      <Text style={{ marginBottom: 5 }}>Working Style</Text>
       <Picker
         selectedValue={jobDetails.workingStyle}
         onValueChange={value => handleInputChange('workingStyle', value)}
