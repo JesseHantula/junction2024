@@ -66,13 +66,14 @@ class Query(graphene.ObjectType):
     def resolve_match(self, info, username=None, company_name=None):
         matches = []
 
-        # Define weights for different compatibility factors
+        # Define weights for different compatibility factors, including skills match
         WEIGHTS = {
-            "values_match": 0.4,
+            "values_match": 0.3,
             "work_life_balance": 0.2,
             "flexibility": 0.2,
             "mental_health": 0.1,
             "working_style": 0.1,
+            "skills_match": 0.1,  # New weight for skills match
         }
 
         def calculate_compatibility_score(user, job_listing):
@@ -84,7 +85,7 @@ class Query(graphene.ObjectType):
             values_score = len(shared_values) / len(user.values) if user.values else 0
             score += values_score * WEIGHTS["values_match"]
 
-            # Work-life balance compatibility (difference in user and company scores)
+            # Work-life balance compatibility
             balance_diff = abs(user.work_life_balance - company.work_life_balance)
             balance_score = max(0, 1 - balance_diff / 10)
             score += balance_score * WEIGHTS["work_life_balance"]
@@ -99,11 +100,20 @@ class Query(graphene.ObjectType):
             mental_health_score = max(0, 1 - mental_health_diff / 10)
             score += mental_health_score * WEIGHTS["mental_health"]
 
-            # Working style compatibility (direct match between user and job listing working style)
+            # Working style compatibility
             working_style_score = (
                 1 if user.working_style == job_listing.working_style else 0
             )
             score += working_style_score * WEIGHTS["working_style"]
+
+            # Skills match (overlap of user skills and job listing requirements)
+            matched_skills = set(user.skills) & set(job_listing.requirements)
+            skills_score = (
+                len(matched_skills) / len(job_listing.requirements)
+                if job_listing.requirements
+                else 0
+            )
+            score += skills_score * WEIGHTS["skills_match"]
 
             # Scale to 0-100
             return int(score * 100)
@@ -113,7 +123,6 @@ class Query(graphene.ObjectType):
             try:
                 user = User.objects.get(username=username)
                 job_listings = JobListing.objects.select_related("company")
-                # select random 2000 job listings
                 job_listings = random.sample(list(job_listings), 2000)
                 if company_name:
                     job_listings = job_listings.filter(company__name=company_name)
@@ -136,9 +145,7 @@ class Query(graphene.ObjectType):
                 company = Company.objects.get(name=company_name)
                 job_listings = JobListing.objects.filter(company=company)
                 users = User.objects.all()
-                # select random 1000 users
-                users = random.sample(list(users), 1000)
-
+                users = random.sample(list(users), 500)
 
                 for job_listing in job_listings:
                     for user in users:
