@@ -21,6 +21,9 @@ class Company(models.Model):
     values = models.JSONField(default=list)
     preferences = models.JSONField(default=list)
     working_habits = models.JSONField(default=list)
+    work_life_balance = models.IntegerField(default=5)
+    flexibility = models.IntegerField(default=5)
+    mental_health = models.IntegerField(default=5)
 
     def __str__(self):
         return self.name

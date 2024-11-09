@@ -29,6 +29,9 @@ class CompanyType(graphene.ObjectType):
     preferences = graphene.List(graphene.String)
     working_habits = graphene.List(graphene.String)
     job_listings = graphene.List(JobListingType)
+    work_life_balance = graphene.Int()
+    flexibility = graphene.Int()
+    mental_health = graphene.Int()
 
 class RegisterUser(graphene.Mutation):
     class Arguments:
@@ -100,11 +103,23 @@ class RegisterCompany(graphene.Mutation):
         values = graphene.List(graphene.String)
         preferences = graphene.List(graphene.String)
         working_habits = graphene.List(graphene.String)
+        work_life_balance = graphene.Int()
+        flexibility = graphene.Int()
+        mental_health = graphene.Int()
 
     success = graphene.Boolean()
     company = graphene.Field(CompanyType)
 
-    def mutate(self, info, name, password, values=None, preferences=None, working_habits=None):
+    def mutate(self,
+               info,
+               name,
+               password,
+               work_life_balance,
+               flexibility,
+               mental_health,
+               values=None,
+               preferences=None,
+               working_habits=None):
         if Company.objects.filter(name=name).exists():
             return RegisterCompany(success=False, company=None)
 
@@ -113,7 +128,10 @@ class RegisterCompany(graphene.Mutation):
             password=password,
             values=values or [],
             preferences=preferences or [],
-            working_habits=working_habits or []
+            working_habits=working_habits or [],
+            work_life_balance=work_life_balance,
+            flexibility=flexibility,
+            mental_health=mental_health
         )
 
         return RegisterCompany(success=True, company=CompanyType(name=company.name))
