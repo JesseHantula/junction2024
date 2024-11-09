@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import { Picker } from '@react-native-picker/picker'; // Updated import
 import { CREATE_JOB_LISTING } from '../graphql/mutations';

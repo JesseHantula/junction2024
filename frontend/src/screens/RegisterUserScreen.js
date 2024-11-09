@@ -2,43 +2,10 @@ import React, { useState, useContext } from 'react';
 import { View, Text, Button, TextInput, TouchableOpacity, Platform, Modal } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Slider from '@react-native-community/slider';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/registrationStyles'
 import { REGISTER_USER } from '../graphql/mutations';
-
-const REGISTER_USER = gql`
-  mutation RegisterUser(
-    $username: String!
-    $password: String!
-    $birthday: Date!
-    $gender: String!
-    $race: String!
-    $values: [String]
-    $workingStyle: String
-    $workLifeBalance: Int
-    $flexibility: Int
-    $mentalHealth: Int
-  ) {
-    registerUser(
-      username: $username
-      password: $password
-      birthday: $birthday
-      gender: $gender
-      race: $race
-      values: $values
-      workingStyle: $workingStyle
-      workLifeBalance: $workLifeBalance
-      flexibility: $flexibility
-      mentalHealth: $mentalHealth
-    ) {
-      success
-      user {
-        username
-      }
-    }
-  }
-`;
 
 const RegisterUserScreen = ({ navigation }) => {
   const { login } = useContext(AuthContext);
