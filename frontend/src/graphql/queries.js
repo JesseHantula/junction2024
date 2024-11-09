@@ -9,6 +9,9 @@ export const GET_USER = gql`
       race
       values
       workingStyle
+      workLifeBalance
+      flexibility
+      mentalHealth
     }
   }
 `;
@@ -20,12 +23,16 @@ export const GET_COMPANY = gql`
       values
       preferences
       workingHabits
+      workLifeBalance
+      flexibility
+      mentalHealth
       jobListings {
         title
         description
         location
         workType
         salary
+        postedDate
       }
     }
   }
@@ -43,6 +50,9 @@ export const GET_JOB_LISTING = gql`
       salary
       company {
         name
+        workLifeBalance
+        flexibility
+        mentalHealth
       }
     }
   }
@@ -60,6 +70,9 @@ export const GET_ALL_JOB_LISTINGS = gql`
       salary
       company {
         name
+        workLifeBalance
+        flexibility
+        mentalHealth
       }
     }
   }
@@ -88,6 +101,9 @@ export const GET_ALL_USERS = gql`
       race
       values
       workingStyle
+      workLifeBalance
+      flexibility
+      mentalHealth
     }
   }
 `;
@@ -99,6 +115,9 @@ export const GET_ALL_COMPANIES = gql`
       values
       preferences
       workingHabits
+      workLifeBalance
+      flexibility
+      mentalHealth
       jobListings {
         title
         location
@@ -113,10 +132,16 @@ export const GET_MATCHES = gql`
       user {
         username
         values
+        workLifeBalance
+        flexibility
+        mentalHealth
       }
       company {
         name
         values
+        workLifeBalance
+        flexibility
+        mentalHealth
       }
       score
     }

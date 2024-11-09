@@ -3,39 +3,52 @@ from .models import User, Company, JobListing
 from graphene_django.types import DjangoObjectType
 
 
-class UserType(graphene.ObjectType):
-    username = graphene.String()
-    password = graphene.String()
-    birthday = graphene.Date()
-    gender = graphene.String()
-    race = graphene.String()
-    values = graphene.List(graphene.String)
-    working_style = graphene.String()
-    work_life_balance = graphene.Int()
-    flexibility = graphene.Int()
-    mental_health = graphene.Int()
+class UserType(DjangoObjectType):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "password",
+            "birthday",
+            "gender",
+            "race",
+            "values",
+            "working_style",
+            "work_life_balance",
+            "flexibility",
+            "mental_health",
+        )
 
 
-class JobListingType(graphene.ObjectType):
-    title = graphene.String()
-    description = graphene.String()
-    requirements = graphene.List(graphene.String)
-    location = graphene.String()
-    work_type = graphene.String()
-    posted_date = graphene.Date()
-    salary = graphene.Float()
+class JobListingType(DjangoObjectType):
+    class Meta:
+        model = JobListing
+        fields = (
+            "title",
+            "description",
+            "requirements",
+            "location",
+            "work_type",
+            "posted_date",
+            "salary",
+            "company",
+        )
 
 
-class CompanyType(graphene.ObjectType):
-    name = graphene.String()
-    password = graphene.String()
-    values = graphene.List(graphene.String)
-    preferences = graphene.List(graphene.String)
-    working_habits = graphene.List(graphene.String)
-    job_listings = graphene.List(JobListingType)
-    work_life_balance = graphene.Int()
-    flexibility = graphene.Int()
-    mental_health = graphene.Int()
+class CompanyType(DjangoObjectType):
+    class Meta:
+        model = Company
+        fields = (
+            "name",
+            "password",
+            "values",
+            "preferences",
+            "working_habits",
+            "job_listings",
+            "work_life_balance",
+            "flexibility",
+            "mental_health",
+        )
 
 
 class RegisterUser(graphene.Mutation):
@@ -117,16 +130,18 @@ class RegisterCompany(graphene.Mutation):
     success = graphene.Boolean()
     company = graphene.Field(CompanyType)
 
-    def mutate(self,
-               info,
-               name,
-               password,
-               work_life_balance,
-               flexibility,
-               mental_health,
-               values=None,
-               preferences=None,
-               working_habits=None):
+    def mutate(
+        self,
+        info,
+        name,
+        password,
+        work_life_balance,
+        flexibility,
+        mental_health,
+        values=None,
+        preferences=None,
+        working_habits=None,
+    ):
 
         if Company.objects.filter(name=name).exists():
             return RegisterCompany(success=False, company=None)
@@ -139,7 +154,7 @@ class RegisterCompany(graphene.Mutation):
             working_habits=working_habits or [],
             work_life_balance=work_life_balance,
             flexibility=flexibility,
-            mental_health=mental_health
+            mental_health=mental_health,
         )
 
         return RegisterCompany(success=True, company=CompanyType(name=company.name))
@@ -210,48 +225,6 @@ class LoginCompany(graphene.Mutation):
             return LoginCompany(success=True, company=CompanyType(name=company.name))
         except Company.DoesNotExist:
             return LoginCompany(success=False, company=None)
-
-
-class UserType(DjangoObjectType):
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "password",
-            "birthday",
-            "gender",
-            "race",
-            "values",
-            "working_style",
-        )
-
-
-class JobListingType(DjangoObjectType):
-    class Meta:
-        model = JobListing
-        fields = (
-            "title",
-            "description",
-            "requirements",
-            "location",
-            "work_type",
-            "posted_date",
-            "salary",
-            "company",
-        )
-
-
-class CompanyType(DjangoObjectType):
-    class Meta:
-        model = Company
-        fields = (
-            "name",
-            "password",
-            "values",
-            "preferences",
-            "working_habits",
-            "job_listings",
-        )
 
 
 class MatchType(graphene.ObjectType):
