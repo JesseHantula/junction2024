@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, Button, TextInput, TouchableOpacity, Platform, Modal } from 'react-native';
+import { View, Text, Button, TextInput, TouchableOpacity, Platform, Modal, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Slider from '@react-native-community/slider';
 import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/registrationStyles'
 import { REGISTER_USER } from '../graphql/mutations';
+import { CORE_VALUES, RACES, SKILLS } from '../constants/constants';
 
 const RegisterUserScreen = ({ navigation }) => {
   const { login } = useContext(AuthContext);
@@ -23,6 +24,7 @@ const RegisterUserScreen = ({ navigation }) => {
       workLifeBalance: formData.workLifeBalance,
       flexibility: formData.flexibility,
       mentalHealth: formData.mentalHealth,
+      skills: formData.skills
     };
 
     registerUser({ variables })
@@ -48,21 +50,9 @@ const RegisterUserScreen = ({ navigation }) => {
     workingStyle: '',
     workLifeBalance: 5,
     flexibility: 5,
-    mentalHealth: 5
+    mentalHealth: 5,
+    skills: []
   });
-
-  const coreValuesList = [
-    'Honesty',
-    'Integrity',
-    'Teamwork',
-    'Innovation',
-    'Excellence',
-    'Respect',
-    'Accountability',
-    'Passion',
-    'Courage',
-    'Empathy',
-  ];
 
   const [showDateModal, setShowDateModal] = useState(false);
   const [tempDate, setTempDate] = useState(new Date());
@@ -77,6 +67,19 @@ const RegisterUserScreen = ({ navigation }) => {
       setFormData({ ...formData, coreValues: selected.filter(val => val !== value) });
     } else if (selected.length < 3) {
       setFormData({ ...formData, coreValues: [...selected, value] });
+    }
+  };
+
+  const handleSkillToggle = skill => {
+    let updatedSkills;
+    if (formData.skills.includes(skill)) {
+      updatedSkills = formData.skills.filter(s => s !== skill);
+    } else {
+      updatedSkills = [...formData.skills, skill];
+    }
+  
+    if (updatedSkills.length <= 8) {
+      handleInputChange('skills', updatedSkills);
     }
   };
 
@@ -156,7 +159,7 @@ const RegisterUserScreen = ({ navigation }) => {
         return (
           <View style={styles.stepContainer}>
             <Text style={styles.header}>Choose Race</Text>
-            {['Asian', 'Black or African American', 'Hispanic or Latino', 'White', 'Native American'].map(option => (
+            {RACES.map(option => (
               <TouchableOpacity key={option} style={[styles.option, formData.race === option && styles.selectedOption]} onPress={() => handleInputChange('race', option)}>
                 <Text style={styles.optionText}>{option}</Text>
               </TouchableOpacity>
@@ -167,7 +170,7 @@ const RegisterUserScreen = ({ navigation }) => {
         return (
           <View style={styles.stepContainer}>
             <Text style={styles.header}>Core Values (Choose up to 3)</Text>
-            {coreValuesList.map(value => (
+            {CORE_VALUES.map(value => (
               <TouchableOpacity
                 key={value}
                 style={[
@@ -236,6 +239,26 @@ const RegisterUserScreen = ({ navigation }) => {
               />
             </View>
           );  
+        case 9:
+          return (
+            <ScrollView>
+              <Text style={styles.header}>Choose up to 8 skills that best represent your experience</Text>
+              {SKILLS.map(option => (
+                <TouchableOpacity
+                  key={option}
+                  style={[
+                    styles.option,
+                    formData.skills.includes(option) && styles.selectedOption,
+                    formData.skills.length >= 8 && !formData.skills.includes(option) && styles.disabledOption,
+                  ]}
+                  onPress={() => handleSkillToggle(option)}
+                  disabled={formData.skills.length >= 8 && !formData.skills.includes(option)}
+                >
+                  <Text style={styles.optionText}>{option}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          );
       default:
         return (
           <View style={styles.stepContainer}>
@@ -246,6 +269,10 @@ const RegisterUserScreen = ({ navigation }) => {
             <Text>Race: {formData.race}</Text>
             <Text>Core values: {formData.coreValues.join(', ')}</Text>
             <Text>Working Style: {formData.workingStyle}</Text>
+            <Text>Importance of work-life balance: {formData.workLifeBalance}</Text>
+            <Text>Importance of flexibility at work: {formData.flexibility}</Text>
+            <Text>Mental health prioritization in the workplace: {formData.mentalHealth}</Text>
+            <Text>Skills: {formData.skills.join(', ')}</Text>
           </View>
         );
     }
@@ -256,7 +283,7 @@ const RegisterUserScreen = ({ navigation }) => {
       {renderStep()}
       <View style={styles.buttonContainer}>
         {step > 1 && <Button title="Back" onPress={prevStep} />}
-        <Button title={step < 9 ? "Next" : "Finish"} onPress={step < 9 ? nextStep : handleRegister} />
+        <Button title={step < 10 ? "Next" : "Finish"} onPress={step < 10 ? nextStep : handleRegister} />
       </View>
     </View>
   );

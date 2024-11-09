@@ -18,6 +18,7 @@ class RegisterUser(graphene.Mutation):
         work_life_balance = graphene.Int()
         flexibility = graphene.Int()
         mental_health = graphene.Int()
+        skills = graphene.List(graphene.String)
 
     success = graphene.Boolean()
     user = graphene.Field(UserType)
@@ -33,6 +34,7 @@ class RegisterUser(graphene.Mutation):
         work_life_balance,
         flexibility,
         mental_health,
+        skills,
         values=None,
         working_style=None,
     ):
@@ -50,6 +52,7 @@ class RegisterUser(graphene.Mutation):
             work_life_balance=work_life_balance,
             flexibility=flexibility,
             mental_health=mental_health,
+            skills=skills
         )
 
         return RegisterUser(success=True, user=UserType(username=user.username))

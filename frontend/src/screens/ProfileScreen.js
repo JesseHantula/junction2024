@@ -31,7 +31,8 @@ const ProfileScreen = () => {
     workingStyle,
     workLifeBalance,
     flexibility,
-    mentalHealth
+    mentalHealth,
+    skills
   } = data.user
 
   return (
@@ -46,6 +47,7 @@ const ProfileScreen = () => {
       <Text style={styles.field}>Work-Life Balance: {workLifeBalance}/10</Text>
       <Text style={styles.field}>Flexibility: {flexibility}/10</Text>
       <Text style={styles.field}>Mental Health: {mentalHealth}/10</Text>
+      <Text style={styles.field}>Skills: {JSON.parse(skills).join(', ')}</Text>
     </View>
   )
 }

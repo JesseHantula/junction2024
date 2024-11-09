@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import Slider from '@react-native-community/slider';
 import styles from '../styles/registrationStyles'
 import { REGISTER_COMPANY } from '../graphql/mutations';
+import { CORE_VALUES } from '../constants/constants';
 
 const RegisterCompanyScreen = ({ navigation }) => {
   const { login } = useContext(AuthContext);
@@ -43,19 +44,6 @@ const RegisterCompanyScreen = ({ navigation }) => {
     flexibility: 5,
     mentalHealth: 5
   });
-
-  const coreValuesList = [
-    'Honesty',
-    'Integrity',
-    'Teamwork',
-    'Innovation',
-    'Excellence',
-    'Respect',
-    'Accountability',
-    'Passion',
-    'Courage',
-    'Empathy',
-  ];
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -107,7 +95,7 @@ const RegisterCompanyScreen = ({ navigation }) => {
         return (
           <View style={styles.stepContainer}>
             <Text style={styles.header}>Select up to 3 values that best represent your company:</Text>
-            {coreValuesList.map(value => (
+            {CORE_VALUES.map(value => (
               <TouchableOpacity
                 key={value}
                 style={[

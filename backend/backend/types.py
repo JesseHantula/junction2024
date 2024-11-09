@@ -41,6 +41,7 @@ class UserType(DjangoObjectType):
             "work_life_balance",
             "flexibility",
             "mental_health",
+            "skills",
         )
 
 
