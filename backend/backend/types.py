@@ -34,6 +34,7 @@ class JobListingType(DjangoObjectType):
             "posted_date",
             "salary",
             "company",
+            "working_style"
         )
 
 
@@ -44,8 +45,6 @@ class CompanyType(DjangoObjectType):
             "name",
             "password",
             "values",
-            "preferences",
-            "working_habits",
             "job_listings",
             "work_life_balance",
             "flexibility",

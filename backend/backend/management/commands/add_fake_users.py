@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 birthday=faker.date_between(start_date='-40y', end_date='-20y'),
                 gender = random.choices(genders, weights=gender_weights, k=1)[0],
                 race = random.choice(races),
-                values = random.choice(values),
+                values = random.sample(values, 3),
                 working_style = random.choice(working_styles),
                 work_life_balance=random.randint(1, 10),
                 flexibility=random.randint(1, 10),

@@ -42,6 +42,7 @@ const CompanyDashboard = () => {
         location: jobDetails.location,
         workType: jobDetails.workType,
         salary: parseFloat(jobDetails.salary),
+        working_style: null
       },
     })
       .then(response => {
