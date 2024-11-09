@@ -1,7 +1,7 @@
 // src/screens/MatchesScreen.js
 
 import React, { useContext } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { GET_MATCHES } from '../graphql/queries';
 import { AuthContext } from '../context/AuthContext';
@@ -31,27 +31,14 @@ const MatchesScreen = () => {
         data={topMatches}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <Text>User: {item.user.username}</Text>
-            <Text>Job Title: {item.jobListing.title}</Text>
-            <Text>Match Score: {item.score}</Text>
-          </View>
+          <TouchableOpacity style={styles.card}>
+            <Text style={styles.companyName}>Job Title: {item.jobListing.title}</Text>
+            <Text style={styles.matchScore}>Match Score: {item.score}</Text>
+          </TouchableOpacity>
         )}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,  // Ensures the container takes up full screen height, enabling scrolling
-    padding: 10,
-  },
-  itemContainer: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-});
 
 export default MatchesScreen;

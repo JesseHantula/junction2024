@@ -113,6 +113,8 @@ class Query(graphene.ObjectType):
             try:
                 user = User.objects.get(username=username)
                 job_listings = JobListing.objects.select_related("company")
+                # select random 200 job listings
+                job_listings = random.sample(list(job_listings), 200)
                 if company_name:
                     job_listings = job_listings.filter(company__name=company_name)
 
@@ -134,6 +136,9 @@ class Query(graphene.ObjectType):
                 company = Company.objects.get(name=company_name)
                 job_listings = JobListing.objects.filter(company=company)
                 users = User.objects.all()
+                # select random 1000 users
+                users = random.sample(list(users), 1000)
+
 
                 for job_listing in job_listings:
                     for user in users:
