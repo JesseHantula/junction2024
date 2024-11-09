@@ -71,3 +71,36 @@ mutation RegisterUser(
   }
 }
 `;
+
+export const CREATE_JOB_LISTING = gql`
+  mutation CreateJobListing(
+    $companyName: String!
+    $title: String!
+    $description: String!
+    $requirements: [String]
+    $location: String
+    $workType: String
+    $salary: Float
+  ) {
+    createJobListing(
+      companyName: $companyName
+      title: $title
+      description: $description
+      requirements: $requirements
+      location: $location
+      workType: $workType
+      salary: $salary
+    ) {
+      success
+      jobListing {
+        title
+        description
+        requirements
+        location
+        workType
+        postedDate
+        salary
+      }
+    }
+  }
+`;

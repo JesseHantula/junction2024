@@ -3,39 +3,7 @@ import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import { Picker } from '@react-native-picker/picker'; // Updated import
-
-const CREATE_JOB_LISTING = gql`
-  mutation CreateJobListing(
-    $companyName: String!
-    $title: String!
-    $description: String!
-    $requirements: [String]
-    $location: String
-    $workType: String
-    $salary: Float
-  ) {
-    createJobListing(
-      companyName: $companyName
-      title: $title
-      description: $description
-      requirements: $requirements
-      location: $location
-      workType: $workType
-      salary: $salary
-    ) {
-      success
-      jobListing {
-        title
-        description
-        requirements
-        location
-        workType
-        postedDate
-        salary
-      }
-    }
-  }
-`;
+import { CREATE_JOB_LISTING } from '../graphql/mutations';
 
 const CompanyDashboard = () => {
   const { accountType, userData } = useContext(AuthContext);
