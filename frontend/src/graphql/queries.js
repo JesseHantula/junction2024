@@ -133,6 +133,15 @@ export const GET_ALL_COMPANIES = gql`
   }
 `;
 
+export const GET_ALL_COMPANY_NAMES = gql`
+  query GetAllCompanies {
+    companies {
+      id
+      name
+    }
+  }
+`;
+
 export const GET_MATCHES = gql`
   query GetMatches($username: String, $companyName: String) {
   match(username: $username, companyName: $companyName) {
