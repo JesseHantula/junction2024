@@ -89,7 +89,7 @@ export const CREATE_JOB_LISTING = gql`
     $location: String
     $workType: String
     $salary: Float
-    $working_style: String
+    $workingStyle: String
   ) {
     createJobListing(
       companyName: $companyName
@@ -99,7 +99,7 @@ export const CREATE_JOB_LISTING = gql`
       location: $location
       workType: $workType
       salary: $salary
-      working_style: $working_style
+      workingStyle: $workingStyle
     ) {
       success
       jobListing {
@@ -110,7 +110,7 @@ export const CREATE_JOB_LISTING = gql`
         workType
         postedDate
         salary
-        working_style
+        workingStyle
       }
     }
   }
