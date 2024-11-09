@@ -1,23 +1,5 @@
 import graphene
-import json
-from datetime import date
-
-USERS_FILE = "users.json"
-COMPANIES_FILE = "companies.json"
-
-
-def load_data(file_name):
-    try:
-        with open(file_name, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return []
-
-
-def save_data(file_name, data):
-    with open(file_name, "w") as f:
-        json.dump(data, f)
-
+from .models import User, Company
 
 class UserType(graphene.ObjectType):
     username = graphene.String()
@@ -27,13 +9,22 @@ class UserType(graphene.ObjectType):
     values = graphene.List(graphene.String)
     working_style = graphene.String()
 
+class JobListingType(graphene.ObjectType):
+    title = graphene.String()
+    description = graphene.String()
+    requirements = graphene.List(graphene.String)
+    location = graphene.String()
+    work_type = graphene.String()
+    posted_date = graphene.Date()
+    salary = graphene.Float()
+
 class CompanyType(graphene.ObjectType):
     name = graphene.String()
     password = graphene.String()
     values = graphene.List(graphene.String)
     preferences = graphene.List(graphene.String)
     working_habits = graphene.List(graphene.String)
-
+    job_listings = graphene.List(JobListingType)
 
 class RegisterUser(graphene.Mutation):
     class Arguments:
@@ -168,14 +159,12 @@ class Query(graphene.ObjectType):
         return matches
 
 
-# backend/schema.py (continued)
-
-
 class Mutation(graphene.ObjectType):
     register_user = RegisterUser.Field()
     login_user = LoginUser.Field()
     register_company = RegisterCompany.Field()
     login_company = LoginCompany.Field()
+    create_job_listing = CreateJobListing.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
