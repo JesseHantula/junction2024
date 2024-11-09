@@ -261,19 +261,21 @@ const RegisterUserScreen = ({ navigation }) => {
           );
       default:
         return (
-          <View style={styles.stepContainer}>
-            <Text style={styles.header}>Review your information:</Text>
-            <Text>Username: {formData.username}</Text>
-            <Text>Date of Birth: {formData.birthDate}</Text>
-            <Text>Gender: {formData.gender}</Text>
-            <Text>Race: {formData.race}</Text>
-            <Text>Core values: {formData.coreValues.join(', ')}</Text>
-            <Text>Working Style: {formData.workingStyle}</Text>
-            <Text>Importance of work-life balance: {formData.workLifeBalance}</Text>
-            <Text>Importance of flexibility at work: {formData.flexibility}</Text>
-            <Text>Mental health prioritization in the workplace: {formData.mentalHealth}</Text>
-            <Text>Skills: {formData.skills.join(', ')}</Text>
+        <View style={styles.stepContainer}>
+          <Text style={styles.header}>Review Your Information</Text>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoText}><Text style={styles.label}>Username:</Text> {formData.username}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Date of Birth:</Text> {formData.birthDate}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Gender:</Text> {formData.gender}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Race:</Text> {formData.race}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Core Values:</Text> {formData.coreValues.join(', ')}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Working Style:</Text> {formData.workingStyle}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Importance of Work-life Balance:</Text> {formData.workLifeBalance}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Importance of Flexibility:</Text> {formData.flexibility}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Mental Health Prioritization:</Text> {formData.mentalHealth}</Text>
+            <Text style={styles.infoText}><Text style={styles.label}>Skills:</Text> {formData.skills.join(', ')}</Text>
           </View>
+        </View>
         );
     }
   };
@@ -282,8 +284,20 @@ const RegisterUserScreen = ({ navigation }) => {
     <View style={styles.container}>
       {renderStep()}
       <View style={styles.buttonContainer}>
-        {step > 1 && <Button title="Back" onPress={prevStep} />}
-        <Button title={step < 10 ? "Next" : "Finish"} onPress={step < 10 ? nextStep : handleRegister} />
+        {step > 1 && (
+          <TouchableOpacity
+            style={[styles.button, styles.backButton]}
+            onPress={prevStep}
+          >
+            <Text style={styles.buttonText}>Back</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity
+          style={[styles.button, step < 10 ? styles.nextButton : styles.finishButton]}
+          onPress={step < 10 ? nextStep : handleRegister}
+        >
+          <Text style={styles.buttonText}>{step < 10 ? 'Next' : 'Finish'}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

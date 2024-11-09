@@ -80,6 +80,50 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
   },
+  button: {
+    flex: 1,
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButton: {
+    backgroundColor: '#f0ad4e',
+  },
+  nextButton: {
+    backgroundColor: '#0d6efd',
+  },
+  finishButton: {
+    backgroundColor: '#28a745',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  infoContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  infoText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 10,
+  },
+
+  label: {
+    fontWeight: 'bold',
+  },
 });
 
 export default styles

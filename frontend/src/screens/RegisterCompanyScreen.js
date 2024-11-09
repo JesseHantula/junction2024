@@ -74,7 +74,8 @@ const RegisterCompanyScreen = ({ navigation }) => {
             <Text style={styles.header}>Please enter your company name</Text>
             <TextInput
               style={styles.input}
-              value={formData.username}
+              value={formData.companyName}
+              placeholder="Enter company name"
               onChangeText={value => handleInputChange('companyName', value)}
             />
           </View>
@@ -86,11 +87,12 @@ const RegisterCompanyScreen = ({ navigation }) => {
             <TextInput
               style={styles.input}
               value={formData.password}
+              placeholder="Enter password"
               onChangeText={value => handleInputChange('password', value)}
               secureTextEntry={true}
             />
           </View>
-        )  
+        );
       case 3:
         return (
           <View style={styles.stepContainer}>
@@ -145,15 +147,18 @@ const RegisterCompanyScreen = ({ navigation }) => {
               onValueChange={value => handleInputChange('mentalHealth', value)}
             />
           </View>
-        );    
-      default:
-        return (
-          <View style={styles.stepContainer}>
-            <Text style={styles.header}>Review your information:</Text>
-            <Text>Company name: {formData.companyName}</Text>
-            <Text>Core values: {formData.coreValues.join(', ')}</Text>
-          </View>
-        );
+        );   
+        default:
+          return (
+            <View style={styles.stepContainer}>
+              <Text style={styles.header}>Review your information:</Text>
+              <Text style={styles.infoText}>Company name: {formData.companyName}</Text>
+              <Text style={styles.infoText}>Core values: {formData.coreValues.join(', ')}</Text>
+              <Text style={styles.infoText}>Work-life balance: {formData.workLifeBalance}</Text>
+              <Text style={styles.infoText}>Flexible hours: {formData.flexibility}</Text>
+              <Text style={styles.infoText}>Mental health priority: {formData.mentalHealth}</Text>
+            </View>
+          );
     }
   };
 
@@ -161,8 +166,14 @@ const RegisterCompanyScreen = ({ navigation }) => {
     <View style={styles.container}>
       {renderStep()}
       <View style={styles.buttonContainer}>
-        {step > 1 && <Button title="Back" onPress={prevStep} />}
-        <Button title={step < 5 ? "Next" : "Finish"} onPress={step < 5 ? nextStep : handleRegister} />
+        {step > 1 && (
+          <TouchableOpacity style={[styles.button, styles.backButton]} onPress={prevStep}>
+            <Text style={styles.buttonText}>Back</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity style={[styles.button, styles.nextButton]} onPress={step < 5 ? nextStep : handleRegister}>
+          <Text style={styles.buttonText}>{step < 5 ? 'Next' : 'Finish'}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
