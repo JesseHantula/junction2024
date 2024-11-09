@@ -2,7 +2,7 @@
 
 import graphene
 from graphene_django.types import DjangoObjectType
-from .models import User, Company, JobListing, CompanyReview
+from .models import User, Company, JobListing, Request, CompanyReview
 
 
 class WorkTypeChoicesEnum(graphene.Enum):
@@ -92,3 +92,8 @@ class MatchType(graphene.ObjectType):
     user = graphene.Field(UserType)
     job_listing = graphene.Field(JobListingType)
     score = graphene.Int()
+
+
+class RequestType(DjangoObjectType):
+    class Meta:
+        model = Request

@@ -6,6 +6,7 @@ export const LOGIN_USER = gql`
       success
       user {
         username
+        id
       }
     }
   }
@@ -134,6 +135,15 @@ export const CREATE_JOB_LISTING = gql`
         salary
         workingStyle
       }
+    }
+  }
+`;
+
+export const CREATE_REQUEST = gql`
+  mutation CreateRequest($userId: ID!, $jobListingId: ID!) {
+    createRequest(userId: $userId, jobListingId: $jobListingId) {
+      success
+      message
     }
   }
 `;
