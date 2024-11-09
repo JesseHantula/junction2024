@@ -44,6 +44,7 @@ const MatchesScreen = ({ navigation }) => {  // Receive navigation prop
             onPress={() => handlePress(item.jobListing.id)}
           >
             <Text style={styles.companyName}>Job Title: {item.jobListing.title}</Text>
+            {accountType === 'Company' && <Text style={styles.matchScore}>User ID: {item.user.id}</Text>}
             <Text style={styles.matchScore}>Match Score: {item.score}</Text>
           </TouchableOpacity>
         )}

@@ -83,6 +83,26 @@ mutation RegisterUser(
 }
 `;
 
+export const CREATE_COMPANY_REVIEW = gql`
+  mutation CreateCompanyReview(
+    $companyName: String!
+    $review: String!
+    $stars: Int!
+  ) {
+    createCompanyReview(
+      companyName: $companyName
+      review: $review
+      stars: $stars
+    ) {
+      success
+      companyReview {
+        review
+        stars
+      }  
+    }
+  }
+`
+
 export const CREATE_JOB_LISTING = gql`
   mutation CreateJobListing(
     $companyName: String!

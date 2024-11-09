@@ -2,7 +2,7 @@
 
 import graphene
 from graphene_django.types import DjangoObjectType
-from .models import User, Company, JobListing, Request
+from .models import User, Company, JobListing, Request, CompanyReview
 
 
 class WorkTypeChoicesEnum(graphene.Enum):
@@ -61,6 +61,15 @@ class JobListingType(DjangoObjectType):
             "salary",
             "company",
             "working_style",
+        )
+
+class CompanyReviewType(DjangoObjectType):
+    class Meta:
+        model = CompanyReview
+        fields = (
+            "company",
+            "review",
+            "stars",
         )
 
 
