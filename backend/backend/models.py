@@ -49,3 +49,15 @@ class JobListing(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Request(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("accepted", "Accepted"),
+        ("rejected", "Rejected"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="requests")
+    job_listing = models.ForeignKey(JobListing, on_delete=models.CASCADE, related_name="requests")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+    created_at = models.DateTimeField(auto_now_add=True)

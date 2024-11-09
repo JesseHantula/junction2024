@@ -2,8 +2,8 @@
 
 import graphene
 import random
-from .models import User, Company, JobListing
-from .types import UserType, CompanyType, JobListingType, WorkTypeChoicesEnum
+from .models import User, Company, JobListing, Request
+from .types import UserType, CompanyType, JobListingType, WorkTypeChoicesEnum, RequestType
 
 
 class RegisterUser(graphene.Mutation):
@@ -68,8 +68,8 @@ class LoginUser(graphene.Mutation):
 
     def mutate(self, info, username, password):
         try:
-            user = User.objects.get(username=username, password=password)
-            return LoginUser(success=True, user=UserType(username=user.username))
+            user2 = User.objects.get(username=username, password=password)
+            return LoginUser(success=True, user=user2)
         except User.DoesNotExist:
             return LoginUser(success=False, user=None)
 
@@ -185,6 +185,27 @@ class LoginCompany(graphene.Mutation):
             return LoginCompany(success=True, company=CompanyType(name=company.name))
         except Company.DoesNotExist:
             return LoginCompany(success=False, company=None)
+        
+class CreateRequest(graphene.Mutation):
+    class Arguments:
+        user_id = graphene.ID(required=True)
+        job_listing_id = graphene.ID(required=True)
+
+    success = graphene.String()
+    message = graphene.String()
+
+    def mutate(self, info, user_id, job_listing_id):
+        user = User.objects.get(id=user_id)
+        job_listing = JobListing.objects.get(id=job_listing_id)
+
+        # Check if a pending request already exists
+        if Request.objects.filter(user=user, job_listing=job_listing, status="pending").exists():
+            return CreateRequest(success="False", message="Similar pending request already exists")
+
+        # Create a new request
+        request = Request.objects.create(user=user, job_listing=job_listing)
+
+        return CreateRequest(success="True", message="Request successfully created.")
 
 
 class Mutation(graphene.ObjectType):
@@ -193,3 +214,4 @@ class Mutation(graphene.ObjectType):
     register_company = RegisterCompany.Field()
     login_company = LoginCompany.Field()
     create_job_listing = CreateJobListing.Field()
+    create_request = CreateRequest.Field()

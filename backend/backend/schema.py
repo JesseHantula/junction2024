@@ -2,8 +2,8 @@
 
 import random
 import graphene
-from .models import User, Company, JobListing
-from .types import UserType, CompanyType, JobListingType, MatchType
+from .models import User, Company, JobListing, Request
+from .types import UserType, CompanyType, JobListingType, MatchType, RequestType
 from .mutations import Mutation
 
 
@@ -20,6 +20,7 @@ class Query(graphene.ObjectType):
     match = graphene.List(
         MatchType, username=graphene.String(), company_name=graphene.String()
     )
+    requests = graphene.List(RequestType)
 
     # Resolve a single user by username
     def resolve_user(self, info, username):
@@ -156,6 +157,9 @@ class Query(graphene.ObjectType):
         # Sort matches by score in descending order
         matches.sort(key=lambda x: x.score, reverse=True)
         return matches
+    
+    def resolve_requests(self, info, user_id=None, job_listing_id=None, status=None):
+        return Request.objects.all()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
