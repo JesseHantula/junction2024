@@ -1,6 +1,9 @@
 # Junction-2024-Aava-Challenge
 Mobile app for Aava challenge at Junction 2024!
 
+### Group members
+Jesse Hantula, Joel Pietiläinen, Arthur Gerster, Yaqoub Baisili, Laura Kloiber
+
 ## how to run
 1. Clone the repository
 2. cd to backend and install the requirements using `pip install -r requirements.txt` if needed then run `python ./manage.py runserver 0.0.0.0:8080`
