@@ -1,5 +1,5 @@
 import graphene
-from .models import User, Company
+from .models import User, Company, JobListing
 
 class UserType(graphene.ObjectType):
     username = graphene.String()
@@ -10,13 +10,22 @@ class UserType(graphene.ObjectType):
     values = graphene.List(graphene.String)
     working_style = graphene.String()
 
+class JobListingType(graphene.ObjectType):
+    title = graphene.String()
+    description = graphene.String()
+    requirements = graphene.List(graphene.String)
+    location = graphene.String()
+    work_type = graphene.String()
+    posted_date = graphene.Date()
+    salary = graphene.Float()
+
 class CompanyType(graphene.ObjectType):
     name = graphene.String()
     password = graphene.String()
     values = graphene.List(graphene.String)
     preferences = graphene.List(graphene.String)
     working_habits = graphene.List(graphene.String)
-
+    job_listings = graphene.List(JobListingType)
 
 class RegisterUser(graphene.Mutation):
     class Arguments:
@@ -88,6 +97,44 @@ class RegisterCompany(graphene.Mutation):
         )
 
         return RegisterCompany(success=True, company=CompanyType(name=company.name))
+    
+class CreateJobListing(graphene.Mutation):
+    class Arguments:
+        company_name = graphene.String(required=True)
+        title = graphene.String(required=True)
+        description = graphene.String(required=True)
+        requirements = graphene.List(graphene.String)
+        location = graphene.String()
+        work_type = graphene.String()
+        salary = graphene.Float()
+
+    success = graphene.Boolean()
+    job_listing = graphene.Field(JobListingType)
+
+    def mutate(self, info, company_name, title, description, requirements=None, location=None, work_type="onsite", salary=None):
+        try:
+            company = Company.objects.get(name=company_name)
+            job_listing = JobListing.objects.create(
+                company=company,
+                title=title,
+                description=description,
+                requirements=requirements or [],
+                location=location,
+                work_type=work_type,
+                salary=salary
+            )
+            return CreateJobListing(success=True, job_listing=JobListingType(
+                title=job_listing.title,
+                description=job_listing.description,
+                requirements=job_listing.requirements,
+                location=job_listing.location,
+                work_type=job_listing.work_type,
+                posted_date=job_listing.posted_date,
+                salary=job_listing.salary
+            ))
+        except Company.DoesNotExist:
+            return CreateJobListing(success=False, job_listing=None)
+
 
 
 class LoginCompany(graphene.Mutation):
@@ -138,6 +185,7 @@ class Mutation(graphene.ObjectType):
     login_user = LoginUser.Field()
     register_company = RegisterCompany.Field()
     login_company = LoginCompany.Field()
+    create_job_listing = CreateJobListing.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
