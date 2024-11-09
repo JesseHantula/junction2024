@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   selectedOption: {
-    backgroundColor: '#5cb85c',
+    backgroundColor: '#66b3ff',
   },
   optionText: {
     fontSize: 16,
