@@ -188,6 +188,7 @@ export const GET_REQUEST_BY_COMPANY = gql`
       status
       createdAt
     }
+  }
 `;
 
 export const GET_COMPANY_REVIEWS_AVG_SCORE = gql`
