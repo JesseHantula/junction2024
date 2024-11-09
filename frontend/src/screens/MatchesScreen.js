@@ -2,21 +2,8 @@
 
 import React from 'react';
 import { View, Text, FlatList } from 'react-native';
-import { gql, useQuery } from '@apollo/client';
-
-const GET_MATCHES = gql`
-  query GetMatches {
-    match {
-      user {
-        username
-      }
-      company {
-        name
-      }
-      score
-    }
-  }
-`;
+import { useQuery } from '@apollo/client';
+import { GET_MATCHES } from '../graphql/queries';
 
 const MatchesScreen = () => {
   const { loading, error, data } = useQuery(GET_MATCHES);

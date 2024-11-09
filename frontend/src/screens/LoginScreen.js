@@ -2,31 +2,10 @@
 
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/authStyles';
-
-const LOGIN_USER = gql`
-  mutation LoginUser($username: String!, $password: String!) {
-    loginUser(username: $username, password: $password) {
-      success
-      user {
-        username
-      }
-    }
-  }
-`;
-
-const LOGIN_COMPANY = gql`
-  mutation LoginCompany($name: String!, $password: String!) {
-    loginCompany(name: $name, password: $password) {
-      success
-      company {
-        name
-      }
-    }
-  }
-`;
+import { LOGIN_COMPANY, LOGIN_USER } from '../graphql/mutations';
 
 const LoginScreen = ({ navigation }) => {
   const { login } = useContext(AuthContext);
