@@ -8,6 +8,9 @@ class User(models.Model):
     race = models.CharField(max_length=50)
     values = models.JSONField(default=list)
     working_style = models.CharField(max_length=50, null=True, blank=True)
+    work_life_balance = models.IntegerField(default=5)
+    flexibility = models.IntegerField(default=5)
+    mental_health = models.IntegerField(default=5)
 
     def __str__(self):
         return self.username

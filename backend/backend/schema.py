@@ -9,6 +9,9 @@ class UserType(graphene.ObjectType):
     race = graphene.String()
     values = graphene.List(graphene.String)
     working_style = graphene.String()
+    work_life_balance = graphene.Int()
+    flexibility = graphene.Int()
+    mental_health = graphene.Int()
 
 class JobListingType(graphene.ObjectType):
     title = graphene.String()
@@ -36,11 +39,25 @@ class RegisterUser(graphene.Mutation):
         race = graphene.String(required=True)
         values = graphene.List(graphene.String)
         working_style = graphene.String()
+        work_life_balance = graphene.Int()
+        flexibility = graphene.Int()
+        mental_health = graphene.Int()
 
     success = graphene.Boolean()
     user = graphene.Field(UserType)
 
-    def mutate(self, info, username, password, birthday, gender, race, values=None, working_style=None):
+    def mutate(self,
+               info,
+               username,
+               password,
+               birthday,
+               gender,
+               race,
+               work_life_balance,
+               flexibility,
+               mental_health,
+               values=None,
+               working_style=None):
         if User.objects.filter(username=username).exists():
             return RegisterUser(success=False, user=None)
 
@@ -51,7 +68,10 @@ class RegisterUser(graphene.Mutation):
             gender=gender,
             race=race,
             values=values or [],
-            working_style=working_style
+            working_style=working_style,
+            work_life_balance=work_life_balance,
+            flexibility=flexibility,
+            mental_health=mental_health
         )
 
         return RegisterUser(success=True, user=UserType(username=user.username))

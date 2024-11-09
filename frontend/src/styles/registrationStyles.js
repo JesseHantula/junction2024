@@ -16,6 +16,11 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 15,
   },
+  subheader: {
+    fontSize: 18,
+    color: '#333',
+    marginBottom: 15,
+  },
   input: {
     backgroundColor: '#fff',
     borderRadius: 8,
