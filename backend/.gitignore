@@ -1,3 +1,4 @@
 __pycache__
 companies.json
 users.json
+db.sqlite3
