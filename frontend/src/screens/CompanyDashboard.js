@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { ScrollView, Text, TextInput, Button, Alert } from 'react-native';
 import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import { Picker } from '@react-native-picker/picker'; // Updated import
@@ -14,8 +14,9 @@ const CompanyDashboard = () => {
     description: '',
     requirements: '',
     location: '',
-    workType: 'onsite', // Default value
+    workType: 'onsite',
     salary: '',
+    workingStyle: 'Independent'
   });
 
   if (accountType !== 'Company') {
@@ -42,7 +43,7 @@ const CompanyDashboard = () => {
         location: jobDetails.location,
         workType: jobDetails.workType,
         salary: parseFloat(jobDetails.salary),
-        working_style: null
+        workingStyle: jobDetails.workingStyle
       },
     })
       .then(response => {
@@ -66,7 +67,7 @@ const CompanyDashboard = () => {
   };
 
   return (
-    <View style={{ padding: 20 }}>
+    <ScrollView style={{ marginBottom: 20 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Add Job Listing</Text>
 
       <TextInput
@@ -116,8 +117,17 @@ const CompanyDashboard = () => {
         style={{ marginBottom: 20, padding: 10, borderWidth: 1, borderRadius: 5 }}
       />
 
-      <Button title="Add Job Listing" onPress={handleAddJobListing} />
-    </View>
+      <Picker
+        selectedValue={jobDetails.workingStyle}
+        onValueChange={value => handleInputChange('workingStyle', value)}
+        style={{ marginBottom: 20 }}
+      >
+        <Picker.Item label="Independent" value="independent" />
+        <Picker.Item label="Collaborative" value="collaborative" />
+      </Picker>
+
+      <Button style={{ marginBottom: 20 }} title="Add Job Listing" onPress={handleAddJobListing} />
+    </ScrollView>
   );
 };
 

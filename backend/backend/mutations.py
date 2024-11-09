@@ -118,6 +118,7 @@ class CreateJobListing(graphene.Mutation):
         location = graphene.String()
         work_type = graphene.String()
         salary = graphene.Float()
+        working_style = graphene.String()
 
     success = graphene.Boolean()
     job_listing = graphene.Field(JobListingType)
@@ -132,6 +133,7 @@ class CreateJobListing(graphene.Mutation):
         location=None,
         work_type="onsite",
         salary=None,
+        working_style=None
     ):
         try:
             company = Company.objects.get(name=company_name)
@@ -143,6 +145,7 @@ class CreateJobListing(graphene.Mutation):
                 location=location,
                 work_type=work_type,
                 salary=salary,
+                working_style=working_style
             )
             return CreateJobListing(
                 success=True,
@@ -154,6 +157,7 @@ class CreateJobListing(graphene.Mutation):
                     work_type=job_listing.work_type,
                     posted_date=job_listing.posted_date,
                     salary=job_listing.salary,
+                    working_style=job_listing.working_style
                 ),
             )
         except Company.DoesNotExist:
