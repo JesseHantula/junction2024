@@ -1,5 +1,6 @@
 import graphene
 import json
+from datetime import date
 
 USERS_FILE = "users.json"
 COMPANIES_FILE = "companies.json"
@@ -26,7 +27,6 @@ class UserType(graphene.ObjectType):
     values = graphene.List(graphene.String)
     working_style = graphene.String()
 
-
 class CompanyType(graphene.ObjectType):
     name = graphene.String()
     password = graphene.String()
@@ -39,7 +39,6 @@ class RegisterUser(graphene.Mutation):
     class Arguments:
         username = graphene.String(required=True)
         password = graphene.String(required=True)
-        birthday = graphene.Date()
         gender = graphene.String(required=True)
         race = graphene.String(required=True)
         values = graphene.List(graphene.String)
@@ -53,7 +52,6 @@ class RegisterUser(graphene.Mutation):
         info,
         username,
         password,
-        birthday,
         gender,
         race,
         values=None,
@@ -66,7 +64,6 @@ class RegisterUser(graphene.Mutation):
         new_user = {
             "username": username,
             "password": password,
-            "birthday": birthday,
             "gender": gender,
             "race": race,
             "values": values or [],
