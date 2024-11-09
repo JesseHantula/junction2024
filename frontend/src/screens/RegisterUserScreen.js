@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, Button, TextInput, TouchableOpacity, StyleSheet, Platform, Modal } from 'react-native';
+import { View, Text, Button, TextInput, TouchableOpacity, Platform, Modal } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
+import styles from '../styles/authStyles'
 
 const REGISTER_USER = gql`
   mutation RegisterUser(
@@ -32,8 +33,6 @@ const RegisterUserScreen = ({ navigation }) => {
   const [registerUser] = useMutation(REGISTER_USER);
 
   const handleRegister = () => {
-    console.log(formData.username)
-    console.log(formData.password)
     const variables = {
       username: formData.username,
       password: formData.password,
@@ -258,6 +257,7 @@ const RegisterUserScreen = ({ navigation }) => {
             <Text>Date of Birth: {formData.birthDate}</Text>
             <Text>Gender: {formData.gender}</Text>
             <Text>Race: {formData.race}</Text>
+            <Text>Core values: {formData.coreValues.join(', ')}</Text>
             <Text>Working Style: {formData.workingStyle}</Text>
           </View>
         );
@@ -274,39 +274,5 @@ const RegisterUserScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    padding: 10,
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-  },
-  selectedOption: {
-    backgroundColor: '#d1e7dd',
-    borderColor: '#0d6efd',
-  },
-  optionText: {
-    fontSize: 16,
-  },
-});
 
 export default RegisterUserScreen;

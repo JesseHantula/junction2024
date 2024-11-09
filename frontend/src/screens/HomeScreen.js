@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Tabs" component={TabNavigator} />
+      <Drawer.Screen name="Mindlink" component={TabNavigator} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       {accountType === 'Company' && (
         <Drawer.Screen name="CompanyDashboard" component={CompanyDashboard} />
