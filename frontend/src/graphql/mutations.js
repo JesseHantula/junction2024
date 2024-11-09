@@ -18,6 +18,7 @@ export const LOGIN_COMPANY = gql`
       success
       company {
         name
+        id
       }
     }
   }

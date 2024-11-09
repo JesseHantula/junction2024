@@ -3,7 +3,14 @@
 import graphene
 import random
 from .models import User, Company, JobListing, Request, CompanyReview
-from .types import UserType, CompanyType, JobListingType, WorkTypeChoicesEnum, RequestType, CompanyReviewType
+from .types import (
+    UserType,
+    CompanyType,
+    JobListingType,
+    WorkTypeChoicesEnum,
+    RequestType,
+    CompanyReviewType,
+)
 
 
 class RegisterUser(graphene.Mutation):
@@ -52,7 +59,7 @@ class RegisterUser(graphene.Mutation):
             work_life_balance=work_life_balance,
             flexibility=flexibility,
             mental_health=mental_health,
-            skills=skills
+            skills=skills,
         )
 
         return RegisterUser(success=True, user=UserType(username=user.username))
@@ -122,32 +129,21 @@ class CreateCompanyReview(graphene.Mutation):
     company_review = graphene.Field(CompanyReviewType)
     errors = graphene.List(graphene.String)
 
-    def mutate(
-        self,
-        info,
-        company_name,
-        review,
-        stars
-    ):
+    def mutate(self, info, company_name, review, stars):
         try:
             company = Company.objects.get(name=company_name)
             company_review = CompanyReview.objects.create(
-                company=company,
-                review=review,
-                stars=stars
+                company=company, review=review, stars=stars
             )
             return CreateCompanyReview(
                 success=True,
                 company_review=CompanyReviewType(
-                    review=company_review.review,
-                    stars=company_review.stars
-                )
+                    review=company_review.review, stars=company_review.stars
+                ),
             )
         except Exception as e:
             es = [str(e)]
             return CreateCompanyReview(success=False, company_review=None, errors=es)
-
-
 
 
 class CreateJobListing(graphene.Mutation):
@@ -219,11 +215,12 @@ class LoginCompany(graphene.Mutation):
 
     def mutate(self, info, name, password):
         try:
-            company = Company.objects.get(name=name, password=password)
-            return LoginCompany(success=True, company=CompanyType(name=company.name))
+            company2 = Company.objects.get(name=name, password=password)
+            return LoginCompany(success=True, company=company2)
         except Company.DoesNotExist:
             return LoginCompany(success=False, company=None)
-        
+
+
 class CreateRequest(graphene.Mutation):
     class Arguments:
         user_id = graphene.ID(required=True)
@@ -237,8 +234,12 @@ class CreateRequest(graphene.Mutation):
         job_listing = JobListing.objects.get(id=job_listing_id)
 
         # Check if a pending request already exists
-        if Request.objects.filter(user=user, job_listing=job_listing, status="pending").exists():
-            return CreateRequest(success="False", message="Similar pending request already exists")
+        if Request.objects.filter(
+            user=user, job_listing=job_listing, status="pending"
+        ).exists():
+            return CreateRequest(
+                success="False", message="Similar pending request already exists"
+            )
 
         # Create a new request
         request = Request.objects.create(user=user, job_listing=job_listing)
