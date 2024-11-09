@@ -21,6 +21,8 @@ class Query(graphene.ObjectType):
         MatchType, username=graphene.String(), company_name=graphene.String()
     )
     requests = graphene.List(RequestType)
+    requests_by_company = graphene.List(RequestType, company_id=graphene.Int(required=True))
+
 
     # Resolve a single user by username
     def resolve_user(self, info, username):
@@ -160,6 +162,14 @@ class Query(graphene.ObjectType):
     
     def resolve_requests(self, info):
         return Request.objects.all()
+    
+    def resolve_requests_by_company(self, info, company_id):
+        try:
+            company = Company.objects.get(id=company_id)
+            job_listings = JobListing.objects.filter(company=company)
+            return Request.objects.filter(job_listing__in=job_listings)
+        except Company.DoesNotExist:
+            return []
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

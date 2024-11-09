@@ -173,3 +173,21 @@ export const GET_MATCHES = gql`
   }
 }
 `;
+
+export const GET_REQUEST_BY_COMPANY = gql`
+  query GetRequestByCompany($companyId: Int!) {
+    requestsByCompany(companyId: $companyId) {
+      id
+      user {
+        username
+        id
+      }
+      jobListing {
+        title
+      }
+      status
+      createdAt
+    }
+  }
+`;
+
