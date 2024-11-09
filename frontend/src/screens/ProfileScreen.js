@@ -21,29 +21,6 @@ const ProfileScreen = () => {
       <CompanyProfile name={userData.name}></CompanyProfile>
     )
   }
-  
-  const QUERY = accountType === 'User' ? GET_USER : GET_COMPANY
-  const variables = accountType === 'User' 
-  ? { username: userData.username } 
-  : { name: userData.name }
-  
-  const { loading, error, data } = useQuery(QUERY, { variables: variables })
-
-  if (loading) return <Text>Loading...</Text>
-  if (error) return <Text>Error loading profile data.</Text>
-
-  const {
-    username,
-    birthday,
-    gender,
-    race,
-    values,
-    workingStyle,
-    workLifeBalance,
-    flexibility,
-    mentalHealth,
-    skills
-  } = data.user
 }
 
 export default ProfileScreen;
