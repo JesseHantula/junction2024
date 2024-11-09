@@ -2,8 +2,8 @@
 
 import graphene
 import random
-from .models import User, Company, JobListing
-from .types import UserType, CompanyType, JobListingType, WorkTypeChoicesEnum
+from .models import User, Company, JobListing, CompanyReview
+from .types import UserType, CompanyType, JobListingType, WorkTypeChoicesEnum, CompanyReviewType
 
 
 class RegisterUser(graphene.Mutation):
@@ -112,6 +112,44 @@ class RegisterCompany(graphene.Mutation):
         return RegisterCompany(success=True, company=CompanyType(name=company.name))
 
 
+class CreateCompanyReview(graphene.Mutation):
+    class Arguments:
+        company_name = graphene.String(required=True)
+        review = graphene.String(required=True)
+        stars = graphene.Int(required=True)
+
+    success = graphene.Boolean()
+    company_review = graphene.Field(CompanyReviewType)
+    errors = graphene.List(graphene.String)
+
+    def mutate(
+        self,
+        info,
+        company_name,
+        review,
+        stars
+    ):
+        try:
+            company = Company.objects.get(name=company_name)
+            company_review = CompanyReview.objects.create(
+                company=company,
+                review=review,
+                stars=stars
+            )
+            return CreateCompanyReview(
+                success=True,
+                company_review=CompanyReviewType(
+                    review=company_review.review,
+                    stars=company_review.stars
+                )
+            )
+        except Exception as e:
+            es = [str(e)]
+            return CreateCompanyReview(success=False, company_review=None, errors=es)
+
+
+
+
 class CreateJobListing(graphene.Mutation):
     class Arguments:
         company_name = graphene.String(required=True)
@@ -193,3 +231,4 @@ class Mutation(graphene.ObjectType):
     register_company = RegisterCompany.Field()
     login_company = LoginCompany.Field()
     create_job_listing = CreateJobListing.Field()
+    create_company_review = CreateCompanyReview.Field()
