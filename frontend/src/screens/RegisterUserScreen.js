@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, Button, TextInput, TouchableOpacity, Platform, Modal } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Slider from '@react-native-community/slider';
 import { gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/registrationStyles'
@@ -14,6 +15,9 @@ const REGISTER_USER = gql`
     $race: String!
     $values: [String]
     $workingStyle: String
+    $workLifeBalance: Int
+    $flexibility: Int
+    $mentalHealth: Int
   ) {
     registerUser(
       username: $username
@@ -23,6 +27,9 @@ const REGISTER_USER = gql`
       race: $race
       values: $values
       workingStyle: $workingStyle
+      workLifeBalance: $workLifeBalance
+      flexibility: $flexibility
+      mentalHealth: $mentalHealth
     ) {
       success
       user {
@@ -44,7 +51,10 @@ const RegisterUserScreen = ({ navigation }) => {
       gender: formData.gender,
       race: formData.race,
       values: formData.coreValues,
-      workingStyle: formData.workingStyle
+      workingStyle: formData.workingStyle,
+      workLifeBalance: formData.workLifeBalance,
+      flexibility: formData.flexibility,
+      mentalHealth: formData.mentalHealth,
     };
 
     registerUser({ variables })
@@ -68,6 +78,9 @@ const RegisterUserScreen = ({ navigation }) => {
     race: '',
     coreValues: [],
     workingStyle: '',
+    workLifeBalance: 5,
+    flexibility: 5,
+    mentalHealth: 5
   });
 
   const coreValuesList = [
@@ -220,6 +233,41 @@ const RegisterUserScreen = ({ navigation }) => {
             ))}
           </View>
         )  
+        case 8:
+          return (
+            <View style={styles.stepContainer}>
+              <Text style={styles.header}>Please answer the following questions from the scale of 1 to 10 on how important each one is to you</Text>
+              <Text style={styles.subheader}>Work-life balance: {formData.workLifeBalance}</Text>
+              <Slider
+                style={{ width: '100%', height: 40 }}
+                minimumValue={1}
+                maximumValue={10}
+                step={1}
+                value={formData.workLifeBalance}
+                onValueChange={value => handleInputChange('workLifeBalance', value)}
+              />
+
+              <Text style={styles.subheader}>Flexible hours and working location: {formData.flexibility}</Text>
+              <Slider
+                style={{ width: '100%', height: 40 }}
+                minimumValue={1}
+                maximumValue={10}
+                step={1}
+                value={formData.flexibility}
+                onValueChange={value => handleInputChange('flexibility', value)}
+              />
+
+              <Text style={styles.subheader}>The priority of mental health in the workplace: {formData.mentalHealth}</Text>
+              <Slider
+                style={{ width: '100%', height: 40 }}
+                minimumValue={1}
+                maximumValue={10}
+                step={1}
+                value={formData.mentalHealth}
+                onValueChange={value => handleInputChange('mentalHealth', value)}
+              />
+            </View>
+          );  
       default:
         return (
           <View style={styles.stepContainer}>
@@ -240,7 +288,7 @@ const RegisterUserScreen = ({ navigation }) => {
       {renderStep()}
       <View style={styles.buttonContainer}>
         {step > 1 && <Button title="Back" onPress={prevStep} />}
-        <Button title={step < 8 ? "Next" : "Finish"} onPress={step < 8 ? nextStep : handleRegister} />
+        <Button title={step < 9 ? "Next" : "Finish"} onPress={step < 9 ? nextStep : handleRegister} />
       </View>
     </View>
   );
