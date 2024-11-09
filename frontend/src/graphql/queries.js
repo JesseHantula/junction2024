@@ -13,6 +13,7 @@ export const GET_USER = gql`
       workLifeBalance
       flexibility
       mentalHealth
+      skills
     }
   }
 `;

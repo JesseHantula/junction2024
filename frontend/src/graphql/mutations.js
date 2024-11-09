@@ -59,6 +59,7 @@ mutation RegisterUser(
   $workLifeBalance: Int
   $flexibility: Int
   $mentalHealth: Int
+  $skills: [String]
 ) {
   registerUser(
     username: $username
@@ -71,6 +72,7 @@ mutation RegisterUser(
     workLifeBalance: $workLifeBalance
     flexibility: $flexibility
     mentalHealth: $mentalHealth
+    skills: $skills
   ) {
     success
     user {

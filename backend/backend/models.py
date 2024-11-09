@@ -11,6 +11,7 @@ class User(models.Model):
     work_life_balance = models.IntegerField(default=5)
     flexibility = models.IntegerField(default=5)
     mental_health = models.IntegerField(default=5)
+    skills = models.JSONField(default=list)
 
     def __str__(self):
         return self.username

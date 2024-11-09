@@ -68,6 +68,18 @@ const styles = StyleSheet.create({
   disabledOption: {
     opacity: 0.5,
   },
+  scrollContainer: {
+    position: 'absolute', // Position relative to the parent container
+    top: 0,             // Adjust top position
+    left: 0,
+    right: 100,
+    bottom: 1500,          // Leave space for header and buttons
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+  },
 });
 
 export default styles
