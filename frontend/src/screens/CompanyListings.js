@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
+import { useFocusEffect } from '@react-navigation/native';
 import { GET_JOB_LISTINGS_BY_COMPANY } from '../graphql/queries';
 
 const CompanyListings = () => {
@@ -9,9 +10,15 @@ const CompanyListings = () => {
   const companyName = userData.name;
 
   // Fetch job listings by company
-  const { loading, error, data } = useQuery(GET_JOB_LISTINGS_BY_COMPANY, {
+  const { loading, error, data, refetch } = useQuery(GET_JOB_LISTINGS_BY_COMPANY, {
     variables: { companyName },
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   if (loading) return <Text>Loading job listings...</Text>;
   if (error) return <Text>Error loading job listings: {error.message}</Text>;

@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { ScrollView, Text, TextInput, Button, Alert, View, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, TextInput, Button, Alert, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
-import { Picker } from '@react-native-picker/picker'; // Updated import
+import { Picker } from '@react-native-picker/picker';
 import { CREATE_JOB_LISTING } from '../graphql/mutations';
-import { SKILLS } from '../constants/constants'; // Updated import
-
+import { SKILLS } from '../constants/constants';
 
 const CompanyDashboard = () => {
   const { accountType, userData } = useContext(AuthContext);
@@ -23,8 +22,8 @@ const CompanyDashboard = () => {
 
   if (accountType !== 'Company') {
     return (
-      <View style={{ padding: 20 }}>
-        <Text>Only companies can access this dashboard.</Text>
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Only companies can access this dashboard.</Text>
       </View>
     );
   }
@@ -66,7 +65,7 @@ const CompanyDashboard = () => {
             description: '',
             requirements: [],
             location: '',
-            workType: 'Onsite', // Reset to default
+            workType: 'Onsite',
             salary: '',
             workingStyle: 'Independent'
           });
@@ -80,78 +79,158 @@ const CompanyDashboard = () => {
   };
 
   return (
-    <ScrollView style={{ marginBottom: 20 }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Add Job Listing</Text>
+    <ScrollView contentContainerStyle={{ paddingBottom: 40 }} style={styles.container}>
+      <Text style={styles.header}>Add Job Listing</Text>
 
       <TextInput
         placeholder="Job Title"
         value={jobDetails.title}
         onChangeText={value => handleInputChange('title', value)}
-        style={{ marginBottom: 10, padding: 10, borderWidth: 1, borderRadius: 5 }}
+        style={styles.input}
       />
 
       <TextInput
         placeholder="Description"
         value={jobDetails.description}
         onChangeText={value => handleInputChange('description', value)}
-        style={{ marginBottom: 10, padding: 10, borderWidth: 1, borderRadius: 5 }}
+        style={styles.input}
+        multiline
       />
-
-      <Text style={{ marginBottom: 5 }}>Requirements (Select up to 8)</Text>
-      {SKILLS.map((skill) => (
-        <TouchableOpacity
-          key={skill}
-          onPress={() => toggleSkill(skill)}
-          style={{
-            padding: 10,
-            marginVertical: 5,
-            backgroundColor: jobDetails.requirements.includes(skill) ? '#add8e6' : '#f0f0f0',
-            borderRadius: 5,
-          }}
-        >
-          <Text>{skill}</Text>
-        </TouchableOpacity>
-      ))}
-
-      <TextInput
-        placeholder="Location"
-        value={jobDetails.location}
-        onChangeText={value => handleInputChange('location', value)}
-        style={{ marginBottom: 10, padding: 10, borderWidth: 1, borderRadius: 5 }}
-      />
-
-      <Text style={{ marginBottom: 5 }}>Work Type</Text>
-      <Picker
-        selectedValue={jobDetails.workType}
-        onValueChange={value => handleInputChange('workType', value)}
-        style={{ marginBottom: 20 }}
-      >
-        <Picker.Item label="Onsite" value="onsite" />
-        <Picker.Item label="Remote" value="remote" />
-        <Picker.Item label="Hybrid" value="hybrid" />
-      </Picker>
 
       <TextInput
         placeholder="Salary"
         value={jobDetails.salary}
         onChangeText={value => handleInputChange('salary', value)}
         keyboardType="numeric"
-        style={{ marginBottom: 20, padding: 10, borderWidth: 1, borderRadius: 5 }}
+        style={styles.input}
       />
 
-      <Text style={{ marginBottom: 5 }}>Working Style</Text>
+      <TextInput
+        placeholder="Location"
+        value={jobDetails.location}
+        onChangeText={value => handleInputChange('location', value)}
+        style={styles.input}
+      />
+
+      <Text style={styles.subHeader}>Requirements (Select up to 8)</Text>
+      <View style={styles.skillContainer}>
+        {SKILLS.map((skill) => (
+          <TouchableOpacity
+            key={skill}
+            onPress={() => toggleSkill(skill)}
+            style={[
+              styles.skill,
+              jobDetails.requirements.includes(skill) && styles.skillSelected
+            ]}
+          >
+            <Text style={styles.skillText}>{skill}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <Text style={styles.subHeader}>Work Type</Text>
+      <Picker
+        selectedValue={jobDetails.workType}
+        onValueChange={value => handleInputChange('workType', value)}
+        style={styles.picker}
+      >
+        <Picker.Item label="Onsite" value="onsite" />
+        <Picker.Item label="Remote" value="remote" />
+        <Picker.Item label="Hybrid" value="hybrid" />
+      </Picker>
+
+      <Text style={styles.subHeader}>Working Style</Text>
       <Picker
         selectedValue={jobDetails.workingStyle}
         onValueChange={value => handleInputChange('workingStyle', value)}
-        style={{ marginBottom: 20 }}
+        style={styles.picker}
       >
         <Picker.Item label="Independent" value="independent" />
         <Picker.Item label="Collaborative" value="collaborative" />
       </Picker>
 
-      <Button style={{ marginBottom: 20 }} title="Add Job Listing" onPress={handleAddJobListing} />
+      <TouchableOpacity style={styles.button} onPress={handleAddJobListing}>
+        <Text style={styles.buttonText}>Add Job Listing</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#f9f9f9',
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+  },
+  subHeader: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 10,
+  },
+  input: {
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    marginBottom: 15,
+  },
+  skillContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 15,
+  },
+  skill: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    margin: 4,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+  },
+  skillSelected: {
+    backgroundColor: '#add8e6', // Keep blue color
+  },
+  skillText: {
+    color: '#333',
+  },
+  picker: {
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  button: {
+    backgroundColor: '#add8e6', // Keep blue color
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
+    textAlign: 'center',
+  },
+});
+
 export default CompanyDashboard;
+
