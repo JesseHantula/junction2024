@@ -12,6 +12,7 @@ import RegisterCompanyScreen from './src/screens/RegisterCompanyScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import MatchesScreen from './src/screens/MatchesScreen'; // Import MatchesScreen
 import JobListingScreen from './src/screens/JobListingScreen'; // Import JobListingScreen
+import CompanyProfileScreen from './src/screens/CompanyProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,11 @@ const App = () => {
               name="JobListingScreen" 
               component={JobListingScreen} 
               options={{ title: 'Job Listing' }} 
+            />
+            <Stack.Screen 
+              name="CompanyProfileScreen" 
+              component={CompanyProfileScreen} 
+              options={{ title: 'Company Profile' }} 
             />
           </Stack.Navigator>
         </NavigationContainer>

@@ -24,8 +24,6 @@ export const GET_COMPANY = gql`
       id
       name
       values
-      preferences
-      workingHabits
       workLifeBalance
       flexibility
       mentalHealth
@@ -130,6 +128,15 @@ export const GET_ALL_COMPANIES = gql`
         title
         location
       }
+    }
+  }
+`;
+
+export const GET_ALL_COMPANY_NAMES = gql`
+  query GetAllCompanies {
+    companies {
+      id
+      name
     }
   }
 `;

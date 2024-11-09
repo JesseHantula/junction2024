@@ -7,6 +7,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import MatchesScreen from './MatchesScreen';
 import ProfileScreen from './ProfileScreen';
 import SettingsScreen from './SettingsScreen';
+import SearchCompanyScreen from './SearchCompanyScreen';
 import CompanyDashboard from './CompanyDashboard'; // Import the component here
 
 const Tab = createBottomTabNavigator();
@@ -15,6 +16,7 @@ const Drawer = createDrawerNavigator();
 const TabNavigator = () => (
   <Tab.Navigator>
     <Tab.Screen name="Matches" component={MatchesScreen} />
+    <Tab.Screen name="Search" component={SearchCompanyScreen} />
     <Tab.Screen name="Profile" component={ProfileScreen} />
   </Tab.Navigator>
 );
