@@ -1,31 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/registrationStyles'
-
-const REGISTER_COMPANY = gql`
-  mutation RegisterCompany(
-    $name: String!
-    $password: String!
-    $values: [String]
-    $preferences: [String]
-    $workingHabits: [String]
-  ) {
-    registerCompany(
-      name: $name
-      password: $password
-      values: $values
-      preferences: $preferences
-      workingHabits: $workingHabits
-    ) {
-      success
-      company {
-        name
-      }
-    }
-  }
-`;
+import { REGISTER_COMPANY } from '../graphql/mutations';
 
 const RegisterCompanyScreen = ({ navigation }) => {
   const { login } = useContext(AuthContext);
