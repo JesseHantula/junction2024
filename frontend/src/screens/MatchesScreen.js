@@ -1,15 +1,16 @@
 // src/screens/MatchesScreen.js
 
 import React, { useContext } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { GET_MATCHES } from '../graphql/queries';
 import { AuthContext } from '../context/AuthContext';
+import styles from '../styles/matchStyles';
 
 const MatchesScreen = () => {
   const { accountType, userData } = useContext(AuthContext);
 
-  // Set variables for the query based on logged-in user type
+  //handlePress and navigate to information Screen
   const variables = accountType === 'User'
     ? { username: userData.username }
     : { companyName: userData.name };
@@ -26,12 +27,12 @@ const MatchesScreen = () => {
       data={data.match}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
-        <View style={{ padding: 10 }}>
-          <Text>User: {item.user.username}</Text>
-          <Text>Company: {item.company.name}</Text>
-          <Text>Match Score: {item.score}</Text>
-        </View>
+        <TouchableOpacity style={styles.card}>
+          <Text style={styles.companyName}>Company: {item.company.name}</Text>
+          <Text style={styles.matchScore}>Match Score: {item.score}</Text>
+        </TouchableOpacity>
       )}
+      contentContainerStyle={styles.listContainer}
     />
   );
 };
