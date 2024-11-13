@@ -4,6 +4,9 @@ MindLink Mobile app for Aava challenge at Junction 2024!
 ### Group members
 Jesse Hantula, Joel Pietiläinen, Arthur Gerster, Yaqoub Baisili, Laura Kloiber
 
+## Video pitch
+https://youtu.be/Nwzw7FuMlN4
+
 ## how to run
 1. Clone the repository
 2. cd to the backend directory and install the requirements using `pip install -r requirements.txt` if needed, then run `python ./manage.py runserver 0.0.0.0:8080`
